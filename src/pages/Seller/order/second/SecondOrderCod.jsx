@@ -22,6 +22,8 @@ const SecondOrderCod = () => {
     console.log("values", values);
   };
 
+  const [form] = Form.useForm();
+
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
       <b>+62</b>
@@ -42,6 +44,7 @@ const SecondOrderCod = () => {
       <div className="wrapperInput">
         <Form
           name="basic"
+          form={form}
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 36 }}
           layout="vertical"

@@ -24,17 +24,34 @@
   margin-top: -20px;
 }
 
+.sidebar_menu_wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-items: center;
+  position: relative;
+  gap: 20px 0px;
+}
+
 .sidebar_menu {
   background-color: inherit;
   border: none;
   width: 100%;
   color: white;
   gap: 50px;
+  margin-top: 20px;
 }
 
 .sidebar-icons {
   color: white;
   font-size: 100%;
+}
+
+.sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 }
 
 .sidebar-submenu {
@@ -47,14 +64,20 @@
   font-size: 1rem;
 }
 
+.sidebar-logout {
+  position: absolute;
+  bottom: 10px;
+}
+
 .sidebar-search {
   width: 100%;
   max-width: 800px;
-  padding: 0;
+  min-width: 400px;
 }
 .sidebar-notif {
   color: @primary-color;
   font-size: 2rem;
+  margin-top: 25px;
 }
 
 #components-layout-demo-side .logo {

@@ -14,6 +14,7 @@ import {
   Space,
 } from "antd";
 import { useNavigate } from "react-router-dom";
+import "../order.less";
 const { Option } = Select;
 
 const NewOrder = () => {
@@ -21,12 +22,16 @@ const NewOrder = () => {
   const onFinish = (values) => {
     console.log("values", values);
   };
+
+  const [form] = Form.useForm();
+
   return (
     <div>
       <h1>Pengiriman</h1>
       <div className="wrapperInput">
         <Form
           name="basic"
+          form={form}
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 36 }}
           layout="horizontal"
@@ -100,7 +105,7 @@ const NewOrder = () => {
                   .localeCompare(optionB.children.toLowerCase())
               }
             >
-              <Option value="COD">COD</Option>
+              <Option value="pickup">Pick up</Option>
             </Select>
           </Form.Item>
           <Form.Item
@@ -114,7 +119,13 @@ const NewOrder = () => {
             ]}
             hasFeedback
           >
-            <DatePicker size="large" style={{ width: "100%", maxWidth: 600 }} />
+            <DatePicker
+              size="large"
+              style={{ width: "100%", maxWidth: 600 }}
+              onChange={(e) => {
+                console.log(e);
+              }}
+            />
           </Form.Item>
           <Form.Item
             name="tanggalPenjemputan"
@@ -162,7 +173,7 @@ const NewOrder = () => {
               navigate("/dashboard/pengiriman/secondOrder");
             }}
           >
-            Submit
+            Lanjutkan
           </Button>
         </Form>
       </div>

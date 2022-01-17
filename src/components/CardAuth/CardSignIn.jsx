@@ -1,8 +1,9 @@
-import { Button, Checkbox, Form, Input, Space } from "antd";
-import React, { useEffect, useState } from "react";
+import { Button, Checkbox, Form, Input, message, Space } from "antd";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import Endpoint from "../../api/AUTH_API";
 import { AuthSignIn } from "../../api/AUTH_API";
+import { UserContext } from "../../context/UserContextProvider";
 
 import { patternEmail, patternPassword } from "../../utils/regExp/regExp";
 import "./CardAuth.less";
@@ -12,6 +13,7 @@ const CardSignIn = () => {
     username: "",
     password: "",
   });
+  const [user, setUser] = useContext(UserContext);
   const navigate = useNavigate();
 
   const [remember, setRemember] = useState(false);
@@ -35,7 +37,23 @@ const CardSignIn = () => {
         localStorage.setItem("name", signIn.username);
         localStorage.setItem("password", signIn.password);
       }
-      console.log(res);
+
+      if (res.status === 200) {
+        setUser({
+          role: res.data.role,
+          username: res.data.username,
+          email: res.data.email,
+          handphone: res.data.noHp,
+          idUser: res.data.idUser,
+          // qis_key_api: "dab-cxw3usqbw1mkk3y1o",
+          // qis_key_channel: "123362",
+        });
+        localStorage.setItem("authorization", res.data.token);
+        message.success("Đăng nhập thành công");
+        navigate("/dashboard/home");
+      } else {
+        message.error("Đăng nhập thất bại");
+      }
     });
   };
 
@@ -97,27 +115,27 @@ const CardSignIn = () => {
               required: true,
               message: "Please input your password!",
             },
-            {
-              min: 6,
-              message: "Masukan password minimal 6 karakter",
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                // console.log("value", value);
-                // let pattern = new RegExp(
-                //   "^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%^&*?)(+=._-]+)$"
-                // );
-                // console.log("pattern.test(value)", pattern.test(value));
-                if (patternPassword.test(value)) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(
-                  new Error(
-                    "Password minimal harus mengandung 1 huruf dan angka!"
-                  )
-                );
-              },
-            }),
+            // {
+            //   min: 6,
+            //   message: "Masukan password minimal 6 karakter",
+            // },
+            // ({ getFieldValue }) => ({
+            //   validator(_, value) {
+            //     // console.log("value", value);
+            //     // let pattern = new RegExp(
+            //     //   "^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9!@#$%^&*?)(+=._-]+)$"
+            //     // );
+            //     // console.log("pattern.test(value)", pattern.test(value));
+            //     if (patternPassword.test(value)) {
+            //       return Promise.resolve();
+            //     }
+            //     return Promise.reject(
+            //       new Error(
+            //         "Password minimal harus mengandung 1 huruf dan angka!"
+            //       )
+            //     );
+            //   },
+            // }),
           ]}
         >
           <Input.Password

@@ -10,6 +10,8 @@ import {
   Tag,
   Button,
   Image,
+  Select,
+  AutoComplete,
 } from "antd";
 import Lottie from "react-lottie";
 import "./Sidebar.less";
@@ -22,15 +24,67 @@ import { IoLogOutSharp } from "react-icons/io5";
 
 const Sidebar = () => {
   const [menu, SetMenu] = useContext(MenuContext);
+  const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
 
   const { Header, Content, Footer, Sider } = Layout;
   const { SubMenu } = Menu;
-  const [collapsed, setCollapsed] = useState(false);
+  const { Option } = Select;
 
   const onCollapse = () => {
     setCollapsed(!collapsed);
   };
+
+  const renderTitle = (title) => (
+    <span>
+      {title}
+      <a
+        style={{
+          float: "right",
+        }}
+        href="https://www.google.com/search?q=antd"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        more
+      </a>
+    </span>
+  );
+
+  const renderItem = (title, count) => ({
+    value: title,
+    label: (
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        {title}
+        <span>{count}</span>
+      </div>
+    ),
+  });
+  const options = [
+    {
+      label: renderTitle("Libraries"),
+      options: [
+        renderItem("Aldodevv", 10000),
+        renderItem("Aldodevv UI", 10600),
+      ],
+    },
+    {
+      label: renderTitle("Solutions"),
+      options: [
+        renderItem("Aldodevv UI FAQ", 60100),
+        renderItem("Aldodevv FAQ", 30010),
+      ],
+    },
+    {
+      label: renderTitle("Articles"),
+      options: [renderItem("Aldodevv design language", 100000)],
+    },
+  ];
 
   return (
     <Layout className="sidebar">
@@ -43,24 +97,15 @@ const Sidebar = () => {
         onCollapse={onCollapse}
         onClick={onCollapse}
       >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-            height: "100%",
-            padding: "20px 0px",
-            alignItems: "center",
-          }}
-        >
+        <div className="sidebar_menu_wrapper">
           <Image
             src="https://cs3.jne.co.id/assets/images/logo_jne_api_white.png"
             preview={false}
             style={{
-              width: "100%",
-              height: "100%",
-              maxHeight: 60,
+              width: collapsed ? "80px" : "120px",
+              height: collapsed ? "45px" : "65px",
               padding: 10,
+              marginTop: 10,
             }}
           />
           <div className="sidebar-wrapper">
@@ -93,10 +138,11 @@ const Sidebar = () => {
           </div>
           <Button
             type="danger"
+            className="sidebar-logout"
             size="large"
             style={{
-              width: "70%",
-              height: 70,
+              width: "50%",
+              height: 60,
             }}
           >
             <IoLogOutSharp style={{ fontSize: 40, color: "white" }} />
@@ -117,13 +163,37 @@ const Sidebar = () => {
             <img src={logoin} width={150} style={{ marginLeft: 40 }} alt="" />{" "}
             <h1>BISNIS</h1>
           </Space>
-          <Space>
-            <div style={{ backgroundColor: "#5e34aa" }}></div>
-            <Input.Search
-              placeholder="input search text"
-              enterButton
-              className="sidebar-search"
-            />
+          <div className="sidebar-head">
+            <Select
+              showSearch
+              style={{ width: 200 }}
+              placeholder="Pilih Ekspedisi"
+              size="large"
+              defaultValue={"JNE"}
+              optionFilterProp="children"
+              filterOption={(input, option) =>
+                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+              }
+              filterSort={(optionA, optionB) =>
+                optionA.children
+                  .toLowerCase()
+                  .localeCompare(optionB.children.toLowerCase())
+              }
+            >
+              <Option value="JNE">JNE</Option>
+            </Select>
+            <AutoComplete
+              dropdownClassName="certain-category-search-dropdown"
+              dropdownMatchSelectWidth={500}
+              options={options}
+            >
+              <Input.Search
+                placeholder="input search text"
+                enterButton
+                size="large"
+                className="sidebar-search"
+              />
+            </AutoComplete>
             <Space>
               <MdNotificationsActive className="sidebar-notif" />
               <div className="sidebar-profile">
@@ -131,7 +201,7 @@ const Sidebar = () => {
                 <Avatar>A</Avatar>
               </div>
             </Space>
-          </Space>
+          </div>
         </Header>
         <Content
           className="site-layout-background"
@@ -144,6 +214,21 @@ const Sidebar = () => {
           {/* <SellerRoutes /> */}
           <ProtectedRoutes />
           {/* <HomeSeller /> */}
+          <br />
+          <br />
+          <br />
+          <h1
+            style={{
+              fontSize: 10,
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "gray",
+            }}
+          >
+            Copyright ©️ Aldodevv 2022 Reserved
+          </h1>
         </Content>
       </Layout>
     </Layout>
