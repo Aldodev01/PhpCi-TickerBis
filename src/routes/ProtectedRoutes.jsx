@@ -1,22 +1,49 @@
 import React, { lazy, Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
-import HomeSeller from "../pages/Seller/home/HomeSeller";
+import { Navigate, Route, Routes } from "react-router-dom";
+const DetailHistory = lazy(() =>
+  import("../pages/Container/Target/orderHistory/DetailHistory")
+);
+const HomeSeller = lazy(() =>
+  import("../pages/Container/Target/home/HomeSeller")
+);
+const OrderHistory = lazy(() =>
+  import("../pages/Container/Target/orderHistory/OrderHistory")
+);
+const ThridOrder = lazy(() =>
+  import("../pages/Container/Target/order/third/ThirdOrder")
+);
 const Sidebar = lazy(() => import("../components/Sidebar/Sidebar"));
 const NotFound = lazy(() => import("../pages/Error/404NotFound"));
-const NewOrder = lazy(() => import("../pages/Seller/order/first/NewOrder"));
-const SecondOrderCod = lazy(() =>
-  import("../pages/Seller/order/second/SecondOrderCod")
+const NewOrder = lazy(() =>
+  import("../pages/Container/Target/order/first/NewOrder")
 );
-const Monitoring = lazy(() => import("../pages/Seller/monitoring/Monitoring"));
-const CekTarif = lazy(() => import("../pages/Seller/tools/CekTarif"));
-const KodePos = lazy(() => import("../pages/Seller/tools/KodePos"));
+const SecondOrderCod = lazy(() =>
+  import("../pages/Container/Target/order/second/SecondOrderCod")
+);
+const Monitoring = lazy(() =>
+  import("../pages/Container/Target/monitoring/Monitoring")
+);
+const CekTarif = lazy(() => import("../pages/Container/Target/tools/CekTarif"));
+const KodePos = lazy(() => import("../pages/Container/Target/tools/KodePos"));
+const Settlement = lazy(() =>
+  import("../pages/Container/Target/finance/settlement/Settlement")
+);
+const DetailSettlement = lazy(() =>
+  import("../pages/Container/Target/finance/settlement/DetailSettlement")
+);
+const Invoice = lazy(() =>
+  import("../pages/Container/Target/finance/invoice/Invoice")
+);
+const Settings = lazy(() =>
+  import("../pages/Container/Target/setting/Settings")
+);
 
 const ProtectedRoutes = () => {
   const routeser = [
     {
       key: 1,
       exact: true,
-      path: "/dashboard/home",
+      path: "/",
       name: "Dashboard",
       component: <HomeSeller />,
     },
@@ -42,32 +69,81 @@ const ProtectedRoutes = () => {
       component: <SecondOrderCod />,
     },
     {
+      key: 5,
+      exact: true,
+      path: "/dashboard/pengiriman/thirdOrder",
+      name: "Third Order",
+      component: <ThridOrder />,
+    },
+    {
+      key: 6,
+      exact: true,
+      path: "/dashboard/pengiriman/history",
+      name: "Order History",
+      component: <OrderHistory />,
+    },
+    {
+      key: 6,
+      exact: true,
+      path: "/dashboard/pengiriman/detail-history/:id",
+      name: "DEtail History",
+      component: <DetailHistory />,
+    },
+    {
       key: 10,
       exact: true,
       path: "/dashboard/pengiriman/monitoring",
-      name: "Second order",
+      name: " Monitoring",
       component: <Monitoring />,
     },
     {
-      key: 50,
+      key: 20,
       exact: true,
-      path: "/dashboard/tools/cektarif",
-      name: "Cek Tarif",
-      component: <CekTarif />,
+      path: "/dashboard/finance/settlement",
+      name: "Finance Settlement",
+      component: <Settlement />,
     },
     {
-      key: 49,
+      key: 21,
+      exact: true,
+      path: "/dashboard/finance/detail-settlement/:id",
+      name: "Finance Settlement",
+      component: <DetailSettlement />,
+    },
+    {
+      key: 22,
+      exact: true,
+      path: "/dashboard/finance/invoice",
+      name: "Finance Invoice",
+      component: <Invoice />,
+    },
+    {
+      key: 40,
+      exact: true,
+      path: "/dashboard/setting",
+      name: " Your Setting",
+      component: <Settings />,
+    },
+    {
+      key: 41,
+      exact: true,
+      path: "/dashboard/setting/:jenis",
+      name: " Your Setting",
+      component: <Settings />,
+    },
+    {
+      key: 59,
       exact: true,
       path: "/dashboard/tools/kodepos",
       name: "Kode Pos",
       component: <KodePos />,
     },
     {
-      key: 99,
+      key: 60,
       exact: true,
-      path: "/",
-      name: "404 NotFound",
-      component: <NotFound />,
+      path: "/dashboard/tools/cektarif",
+      name: "Cek Tarif",
+      component: <CekTarif />,
     },
   ];
   return (
@@ -83,6 +159,9 @@ const ProtectedRoutes = () => {
             />
           );
         })}
+        <Route path="/404" element={<NotFound />} />
+        {/* <Route path="*" exact={true} element={<NotFound />} /> */}
+        <Route path="*" element={<Navigate to="/404" />} />
       </Routes>
       {/* <Suspense fallback={null}>
         <Routes>

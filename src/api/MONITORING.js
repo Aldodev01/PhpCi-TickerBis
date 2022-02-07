@@ -1,16 +1,16 @@
 import { contextApi } from "./CONTEXT";
 
-const token = localStorage.getItem("token");
+const token = sessionStorage.getItem("authorization");
 
-export const MonitoringTable = async (id, data) => {
+export const MonitoringTable = async (key) => {
   try {
-    const result = await contextApi(`/akun/${id}/monitoring`, {
+    const result = await contextApi(`/akun/${key.queryKey[1]}/monitoring`, {
       method: "POST",
       headers: {
-        "content-type": "application/json",
-        Authorizaton: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
       },
-      data: data,
+      data: key.queryKey[2],
     });
     return result;
   } catch (error) {
@@ -26,7 +26,7 @@ export const PickupLocation = async (id) => {
         method: "GET",
         headers: {
           "content-type": "application/json",
-          Authorizaton: `Bearer ${token}`,
+          Authorization: "Bearer " + token,
         },
       }
     );
@@ -35,5 +35,3 @@ export const PickupLocation = async (id) => {
     return error;
   }
 };
-
-

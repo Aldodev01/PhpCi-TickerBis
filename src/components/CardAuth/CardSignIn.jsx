@@ -1,56 +1,63 @@
-import { Button, Checkbox, Form, Input, message, Space } from "antd";
-import React, { useContext, useEffect, useState } from "react";
+import { Button, Checkbox, Form, Input, message, Space, Modal } from "antd";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 // import Endpoint from "../../api/AUTH_API";
 import { AuthSignIn } from "../../api/AUTH_API";
 import { UserContext } from "../../context/UserContextProvider";
+import logoin from "../../assets/lib/imezi-logo.svg";
 
 import { patternEmail, patternPassword } from "../../utils/regExp/regExp";
 import "./CardAuth.less";
+import { fromBinary, toBinary } from "../../utils/binary/Binary";
 
 const CardSignIn = () => {
+  const [user, setUser] = useContext(UserContext);
+  const navigate = useNavigate();
   const [signIn, setSignIn] = useState({
     username: "",
     password: "",
   });
-  const [user, setUser] = useContext(UserContext);
-  const navigate = useNavigate();
-
   const [remember, setRemember] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [emailer, setEmailer] = useState("");
 
-  const [form] = Form.useForm();
+  const handleVisible = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+  const handleReset = () => {
+    setIsModalVisible(!isModalVisible);
+  };
 
-  const onFinish = async () => {
-    form.resetFields();
-    // Endpoint.post("/auth/signin", signIn)
-    //   .then((res) => {
-    //     console.log(res);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
+  const encodedPayPass = btoa("password");
+  const encodedPassword = btoa(signIn.password);
+  const encodedPayReme = btoa("remember");
+  const encodedReme = btoa(remember);
+  const encodedPayName = btoa("name");
+  const encodedEmail = btoa(signIn.username);
+
+  const decodedPayPass = atob(encodedPayPass);
+  const decodedPayReme = atob(encodedPayReme);
+  const decodedPayName = atob(encodedPayName);
+
+  console.log(decodedPayPass, decodedPayName, decodedPayReme);
+
+  const onFinish = async (e) => {
     const result = await AuthSignIn({
       username: signIn.username,
       password: signIn.password,
     }).then((res) => {
       if (remember) {
-        localStorage.setItem("name", signIn.username);
-        localStorage.setItem("password", signIn.password);
+        localStorage.setItem(encodedPayName, encodedEmail);
+        localStorage.setItem(encodedPayPass, encodedPassword);
+        localStorage.setItem(encodedPayReme, encodedReme);
+      } else {
+        localStorage.clear();
       }
 
       if (res.status === 200) {
-        setUser({
-          role: res.data.role,
-          username: res.data.username,
-          email: res.data.email,
-          handphone: res.data.noHp,
-          idUser: res.data.idUser,
-          // qis_key_api: "dab-cxw3usqbw1mkk3y1o",
-          // qis_key_channel: "123362",
-        });
-        localStorage.setItem("authorization", res.data.token);
+        sessionStorage.setItem("authorization", res.data.token);
         message.success("Đăng nhập thành công");
-        navigate("/dashboard/home");
+        window.location.reload();
       } else {
         message.error("Đăng nhập thất bại");
       }
@@ -58,26 +65,46 @@ const CardSignIn = () => {
   };
 
   useEffect(() => {
-    form.resetFields();
+    const userNamex = localStorage.getItem(encodedPayName);
+    const passwordx = localStorage.getItem(encodedPayPass);
+    const rememberx = localStorage.getItem(encodedPayReme);
+
+    const decodedPassword = atob(passwordx);
+    const decodedReme = atob(rememberx);
+    const decodedEmail = atob(userNamex);
+
+    if (rememberx) {
+      setRemember(rememberx);
+      setSignIn({
+        ...signIn,
+        username: decodedEmail,
+        password: decodedPassword,
+      });
+    }
   }, []);
 
   return (
     <div className="card_signin_wrap">
+      <br />
+      <Space>
+        <img src={logoin} width={100} alt="" />{" "}
+        <h3 style={{ marginTop: 10 }}>Sign In</h3>
+      </Space>
       <br />
       <br />
       <br />
 
       <Form
         name="basic"
-        labelCol={{ span: 1 }}
-        wrapperCol={{ span: 96 }}
+        labelCol={{ span: 19 }}
+        wrapperCol={{ span: 100 }}
         initialValues={{ remember: true }}
         onFinish={onFinish}
         // onFinishFailed={onFinishFailed}
         autoComplete="off"
+        className="w100"
       >
         <Form.Item
-          name="username"
           rules={[
             {
               required: true,
@@ -99,7 +126,9 @@ const CardSignIn = () => {
         >
           <Input
             placeholder="Your Email@gmail.com"
-            onChange={(e) => {
+            size="large"
+            value={signIn.username}
+            onInput={(e) => {
               setSignIn({
                 ...signIn,
                 username: e.target.value,
@@ -109,7 +138,6 @@ const CardSignIn = () => {
         </Form.Item>
 
         <Form.Item
-          name="password"
           rules={[
             {
               required: true,
@@ -141,40 +169,66 @@ const CardSignIn = () => {
           <Input.Password
             style={{ padding: "0px 10px" }}
             placeholder="Your Password"
-            onChange={(e) => {
+            size="large"
+            onInput={(e) => {
               setSignIn({
                 ...signIn,
                 password: e.target.value,
               });
             }}
+            value={signIn.password}
           />
         </Form.Item>
-        <Space className="flex-between w100">
+        <div className="flex-between w100">
           <Checkbox
+            checked={remember}
+            size="large"
             onChange={() => {
               setRemember(!remember);
             }}
           >
             Remember me
           </Checkbox>
-          <a href="#">Lupa Password ?</a>
-        </Space>
+          <Button type="link" onClick={handleVisible}>
+            Lupa Password ?
+          </Button>
+        </div>
         <br />
         <br />
 
-        <Button type="primary" htmlType="submit" className="w100">
-          Submit
-        </Button>
-        <Button
-          className="w100"
-          type="danger"
-          onClick={() => {
-            navigate("/signUp");
-          }}
-        >
-          Sign Up
-        </Button>
+        <Space direction="vertical" className="w100">
+          <Button
+            type="primary"
+            htmlType="submit"
+            size="large"
+            className="w100"
+          >
+            Sign In
+          </Button>
+          <Button
+            className="w100"
+            size="large"
+            type="danger"
+            onClick={() => {
+              navigate("/signUp");
+            }}
+          >
+            Sign Up
+          </Button>
+        </Space>
       </Form>
+
+      <Modal
+        title="Don't You Remember Your Password ?"
+        visible={isModalVisible}
+        onOk={handleReset}
+        onCancel={handleVisible}
+        okText="Kirim Email"
+        cancelText="Ga jadi:v"
+        centered
+      >
+        <Input placeholder="Insert Your Email" />
+      </Modal>
     </div>
   );
 };

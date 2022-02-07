@@ -30,11 +30,11 @@ const MenuContextProvider = ({ children }) => {
         <AiFillSlackCircle
           style={{ fontSize: 35 }}
           onClick={() => {
-            navigate("/dashboard/home");
+            navigate("/");
           }}
         />
       ),
-      link: "/dashboard/home",
+      link: "/",
     },
     {
       id: 2,
@@ -106,7 +106,7 @@ const MenuContextProvider = ({ children }) => {
     },
     {
       id: 5,
-      title: "User Setting",
+      title: "Setting",
       icon: (
         <FaUsersCog
           style={{ fontSize: 30 }}

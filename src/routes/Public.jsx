@@ -1,8 +1,8 @@
 import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
-const Signin = lazy(() => import("../pages/Auth/Signin/Signin"));
-const Signup = lazy(() => import("../pages/Auth/Signup/Signup"));
+const Signin = lazy(() => import("../pages/Container/Auth/Signin/Signin"));
+const Signup = lazy(() => import("../pages/Container/Auth/Signup/Signup"));
 
 const Public = () => {
   const routeser = [

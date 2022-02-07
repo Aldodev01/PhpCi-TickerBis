@@ -7,8 +7,9 @@ const UserContextProvider = ({ children }) => {
     role: "",
     username: "",
     email: "",
-    handphone: "",
     idUser: "",
+    photo: "",
+    validDate: "",
     // qis_key_api: "",
     // qis_key_channel: "",
   });

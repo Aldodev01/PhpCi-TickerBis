@@ -1,31 +1,56 @@
 import "./App.less";
-import { lazy, Suspense, useEffect, useState } from "react";
-import { Route, Routes } from "react-router-dom";
-import Dashboard from "./pages/Dashboard/Dashboard";
-import Signup from "./pages/Auth/Signup/Signup";
+import { useContext, useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar/Sidebar";
-import ProtectedRoutes from "./routes/ProtectedRoutes";
-import HomeSeller from "./pages/Seller/home/HomeSeller";
-import Order from "./pages/Seller/order/Order";
 import Public from "./routes/Public";
-
+import CostumerService from "./components/CostumerService/CostumerService";
+import { UserContext } from "./context/UserContextProvider";
+import MobileRoutes from "./routes/MobileRoutes";
+import { Button, Space } from "antd-mobile";
+import { UserAgenCheck } from "./utils/device/Device";
 function App() {
   const [token, setToken] = useState(null);
 
   useEffect(() => {
-    setToken(localStorage.getItem("authorization"));
+    setToken(sessionStorage.getItem("authorization"));
   }, []);
+
+  function Dekstop() {
+    if (token) {
+      return (
+        <>
+          <CostumerService />
+          <Sidebar />
+        </>
+      );
+    } else {
+      return <Public />;
+    }
+
+    return;
+  }
+
+  function Mobile() {
+    if (token) {
+      return <MobileRoutes />;
+    } else {
+      return <Button>123</Button>;
+    }
+
+    return;
+  }
+
   return (
     <>
-      {token ? <Sidebar /> : <Public />}
-      {/* <ProtectedRoutes /> */}
-      {/* <Suspense fallback={null}>
-        <Routes>
-          <Route path="/signUp" element={<Sidebar />} />
-          <Route path="/dashboard" element={<HomeSeller />} />
-          <Route path="/" element={<Order />} />
-        </Routes>
-      </Suspense> */}
+      {UserAgenCheck ? <Mobile /> : <Dekstop />}
+      {/* <Dekstop /> */}
+      {/* {token ? (
+        <>
+          <CostumerService />
+          <Sidebar />
+        </>
+      ) : (
+        <Public />
+      )} */}
     </>
   );
 }

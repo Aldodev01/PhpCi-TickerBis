@@ -89,6 +89,10 @@ b {
   width: 100%;
 }
 
+.w50 {
+  width: 50%;
+}
+
 .h100 {
   height: 100%;
 }
@@ -98,8 +102,31 @@ b {
   justify-content: space-between;
 }
 
+.flex-start {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
 .flex-center {
   display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-column-start {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.display-none {
+  display: none;
+}
+
+.flex-column-center {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
@@ -112,4 +139,35 @@ b {
   font-size: 1.2rem;
   margin-left: auto;
   margin-right: auto;
+}
+
+.wrapperInput {
+  background-color: ghostwhite;
+  padding: 20px;
+  box-shadow: @box-shadow-base;
+  border-radius: 20px;
+  width: 100%;
+}
+
+.font-10 {
+  font-size: 10px;
+}
+
+.font-20 {
+  font-size: 20px;
+}
+
+:root:root {
+  --adm-color-primary: @primary-color;
+  --adm-color-success: @success-color;
+  --adm-color-warning: @warning-color;
+  --adm-color-danger: @error-color;
+  --adm-color-white: #ffffff;
+  --adm-color-weak: #999999;
+  --adm-color-light: @light;
+  --adm-border-color: @border-color-base;
+  --adm-font-size-main: 13px;
+  --adm-color-text: #333333;
+  --adm-button-border-radius: @border-radius-base;
+  --adm-font-family: "Poppins", sans-serif;
 }

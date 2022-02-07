@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Layout,
   Menu,
@@ -12,27 +12,45 @@ import {
   Image,
   Select,
   AutoComplete,
+  message,
+  Statistic,
+  Tooltip,
 } from "antd";
-import Lottie from "react-lottie";
 import "./Sidebar.less";
 import logoin from "../../assets/lib/imezi-logo.svg";
 import { MdNotificationsActive } from "react-icons/md";
 import ProtectedRoutes from "../../routes/ProtectedRoutes";
 import { useNavigate } from "react-router-dom";
 import { MenuContext } from "../../context/MenuContextProvider";
+import { UserContext } from "../../context/UserContextProvider";
 import { IoLogOutSharp } from "react-icons/io5";
+import { AuthGetAccount } from "../../api/AUTH_API";
+import { useQuery } from "react-query";
+import CostumerService from "../CostumerService/CostumerService";
 
 const Sidebar = () => {
   const [menu, SetMenu] = useContext(MenuContext);
+  const [user, setUser] = useContext(UserContext);
+  const deadline = Date.now() + 1000 * 60 * 60 * 1 * 1 + 1000 * 30;
+  navigator.getBattery().then((battery) => console.log(battery));
+  console.log(navigator.connection);
+
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
 
   const { Header, Content, Footer, Sider } = Layout;
+  const { Countdown } = Statistic;
   const { SubMenu } = Menu;
   const { Option } = Select;
 
   const onCollapse = () => {
     setCollapsed(!collapsed);
+  };
+
+  const onFinish = () => {
+    localStorage.clear();
+    navigate("/");
+    window.location.reload();
   };
 
   const renderTitle = (title) => (
@@ -85,6 +103,31 @@ const Sidebar = () => {
       options: [renderItem("Aldodevv design language", 100000)],
     },
   ];
+
+  const signOut = () => {
+    sessionStorage.clear();
+    navigate("/");
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    const result = AuthGetAccount()
+      .then((res) => {
+        setUser({
+          role: res.data.user[0].name,
+          username: res.data.user[0].nama,
+          email: res.data.user[0].email,
+          validDate: res.data.validateAt,
+          idUser: res.data.id,
+          photo: res.data.fotoSelfie,
+        });
+      })
+      .catch((err) => {
+        message.error("Ocurrió un error en el servidor al iniciar sesión");
+        localStorage.clear();
+        navigate("/");
+      });
+  }, []);
 
   return (
     <Layout className="sidebar">
@@ -144,6 +187,7 @@ const Sidebar = () => {
               width: "50%",
               height: 60,
             }}
+            onClick={signOut}
           >
             <IoLogOutSharp style={{ fontSize: 40, color: "white" }} />
           </Button>
@@ -160,10 +204,20 @@ const Sidebar = () => {
           }}
         >
           <Space>
-            <img src={logoin} width={150} style={{ marginLeft: 40 }} alt="" />{" "}
-            <h1>BISNIS</h1>
+            <img src={logoin} width={120} style={{ marginLeft: 40 }} alt="" />{" "}
+            <h3>BISNIS</h3>
           </Space>
           <div className="sidebar-head">
+            <Tooltip
+              title="Sign In Ulang jika Waktu sudah Habis"
+              color={"#ed0678"}
+            >
+              <Countdown
+                title="Waktumu tinggal"
+                value={deadline}
+                onFinish={onFinish}
+              />
+            </Tooltip>
             <Select
               showSearch
               style={{ width: 200 }}
@@ -197,8 +251,17 @@ const Sidebar = () => {
             <Space>
               <MdNotificationsActive className="sidebar-notif" />
               <div className="sidebar-profile">
-                <p style={{ marginTop: 10, marginRight: 10 }}>Aldodevv</p>
-                <Avatar>A</Avatar>
+                <p style={{ marginTop: 10, marginRight: 10 }}>
+                  {user.username}
+                </p>
+                <Avatar
+                  src={
+                    <Image
+                      src={"https://joeschmoe.io/api/v1/random"}
+                      style={{ width: 32 }}
+                    />
+                  }
+                />
               </div>
             </Space>
           </div>

@@ -1,6 +1,22 @@
 import { contextApi } from "./CONTEXT";
 
-const token = localStorage.getItem("token");
+const token = sessionStorage.getItem("authorization");
+
+export const AuthGetAccount = async () => {
+  try {
+    const result = await contextApi("/akun/", {
+      method: "GET",
+      headers: {
+        // "access-control-allow-origin" : "*",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    });
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
 
 export const AuthSignIn = async (data) => {
   try {
@@ -8,7 +24,6 @@ export const AuthSignIn = async (data) => {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        Authorizaton: `Bearer ${token}`,
       },
 
       data: data,
