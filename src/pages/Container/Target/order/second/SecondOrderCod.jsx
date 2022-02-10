@@ -10,6 +10,7 @@ import {
   Space,
   Tooltip,
   Steps,
+  AutoComplete,
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import "../order.less";
@@ -27,7 +28,8 @@ const SecondOrderCod = () => {
   const [dataPackageControl, setDataPackageControl] = useState({
     selected: 0,
   });
-
+  const [value, setValue] = useState("");
+  const [options, setOptions] = useState([]);
   const [inputer, setInputer] = useState({
     alamatPenerima: "",
     beratPaket: 1,
@@ -56,15 +58,50 @@ const SecondOrderCod = () => {
   const [dataPackage, setDataPackage] = useState([inputer]);
 
   const navigate = useNavigate();
-  const onFinish = (values) => {
-    console.log("values", values);
+
+  const onSearch = (searchText) => {
+    console.log("onSearch", searchText);
+  };
+
+  const onSelect = (data) => {
+    console.log("onSelect", data);
+  };
+
+  const onChange = (data) => {
+    console.log("onChange", data);
+    setValue(data);
+  };
+
+  const onFinish = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        // Submit values
+        // submitValues(values);
+        console.log("Success:", values);
+      })
+      .catch((errorInfo) => {});
   };
 
   const [form] = Form.useForm();
-  console.log(
-    "NAMA PENERIMAA",
-    dataPackage[dataPackageControl.selected].namaPenerima
-  );
+
+  /**
+   * !HANDLE INPUT DATA PACKAGE
+   * @param {*name name Nama untuk setiap Input "ISTILAH"} name
+   * @param {*value Value untuk setiap Nama} value
+   * @see https://imezi-aldo.netlify.app
+   * @author aldodevv
+   */
+  const handleInput = (name, value) => {
+    let activePackageData = {
+      ...dataPackage[dataPackageControl.selected],
+    };
+    activePackageData[name] = value;
+    setDataPackage((oldData) => {
+      oldData[dataPackageControl.selected] = activePackageData;
+      return [...oldData];
+    });
+  };
 
   useEffect(() => {
     form.resetFields();
@@ -145,6 +182,7 @@ const SecondOrderCod = () => {
         <div className="wrapperInput">
           <Form
             form={form}
+            id="second-form"
             labelCol={{ span: 10 }}
             wrapperCol={{ span: 36 }}
             layout="vertical"
@@ -387,7 +425,6 @@ const SecondOrderCod = () => {
 
             <Button
               type="primary"
-              htmlType="submit"
               className="w100"
               onClick={() => {
                 navigate("/dashboard/pengiriman/secondOrder");
@@ -427,6 +464,14 @@ const SecondOrderCod = () => {
           {dataPackage.map((e, i) => (
             <div
               className="secondOrder-listing"
+              style={{
+                border:
+                  dataPackageControl.selected === i
+                    ? "1px solid #f8f8ff"
+                    : "1px solid #ed0678",
+                backgroundColor:
+                  dataPackageControl.selected === i ? "#ed0678" : "#f8f8ff",
+              }}
               onClick={() => {
                 setDataPackageControl({
                   ...dataPackageControl,
@@ -436,7 +481,14 @@ const SecondOrderCod = () => {
             >
               <div className="flex-between w100">
                 <h3>
-                  <strong>
+                  <strong
+                    style={{
+                      color:
+                        dataPackageControl.selected === i
+                          ? "#f8f8ff"
+                          : "#ed0678",
+                    }}
+                  >
                     {dataPackage[i].namaPenerima.length < 1
                       ? `Paket ${i + 1}`
                       : dataPackage[i].namaPenerima}
@@ -448,12 +500,26 @@ const SecondOrderCod = () => {
                     color={"#ed0678"}
                   >
                     <RiFolderWarningFill
-                      style={{ color: "red", fontSize: 20 }}
+                      style={{
+                        color:
+                          dataPackageControl.selected === i
+                            ? "#f8f8ff"
+                            : "#ed0678",
+                        fontSize: 20,
+                      }}
                     />
                   </Tooltip>
                 )}
               </div>
-              <p style={{ marginTop: -10 }}>Rp. {e.nilaiCod}</p>
+              <p
+                style={{
+                  marginTop: -10,
+                  color:
+                    dataPackageControl.selected === i ? "#f8f8ff" : "#ed0678",
+                }}
+              >
+                Rp. {e.nilaiCod}
+              </p>
             </div>
           ))}
 
@@ -474,9 +540,10 @@ const SecondOrderCod = () => {
           className="w100"
           size="large"
           type="danger"
-          onClick={() => {
-            navigate("/dashboard/pengiriman/thirdOrder");
-          }}
+          onClick={onFinish}
+          // onClick={() => {
+          //   navigate("/dashboard/pengiriman/thirdOrder");
+          // }}
         >
           Simpan dan Lanjutkan
         </Button>

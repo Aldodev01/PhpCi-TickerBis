@@ -4,9 +4,10 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import Public from "./routes/Public";
 import CostumerService from "./components/CostumerService/CostumerService";
 import { UserContext } from "./context/UserContextProvider";
-import MobileRoutes from "./routes/MobileRoutes";
-import { Button, Space } from "antd-mobile";
 import { UserAgenCheck } from "./utils/device/Device";
+import { UserActivity } from "./utils/Activity/UserActive";
+import PublicMobile from "./routes/PublicMobileRoutes";
+import M_Menubar from "./components/mobile/MenuBar/Menubar";
 function App() {
   const [token, setToken] = useState(null);
 
@@ -31,9 +32,9 @@ function App() {
 
   function Mobile() {
     if (token) {
-      return <MobileRoutes />;
+      return <M_Menubar />;
     } else {
-      return <Button>123</Button>;
+      return <PublicMobile />;
     }
 
     return;

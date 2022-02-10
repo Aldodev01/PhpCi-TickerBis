@@ -47,10 +47,7 @@ body {
   font-family: "Open Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  display: flex;
-  flex-direction: column;
   overflow-x: hidden;
-  align-items: center;
   font-family: "Poppins", sans-serif;
 }
 
@@ -97,6 +94,10 @@ b {
   height: 100%;
 }
 
+.h100vh {
+  height: 100vh;
+}
+
 .flex-between {
   display: flex;
   justify-content: space-between;
@@ -105,6 +106,12 @@ b {
 .flex-start {
   display: flex;
   justify-content: center;
+  align-items: flex-start;
+}
+
+.flex-start-start {
+  display: flex;
+  justify-content: flex-start;
   align-items: flex-start;
 }
 
@@ -155,6 +162,14 @@ b {
 
 .font-20 {
   font-size: 20px;
+}
+
+.padding20 {
+  padding: 20px;
+}
+
+.flex1 {
+  flex: 1;
 }
 
 :root:root {

@@ -145,9 +145,8 @@ const Monitoring = () => {
             )}
             content={() => componentRef.current}
           />
-          {console.log(pdf.isModal)}
           <div style={{ display: "none" }}>
-            <Pdf data={{ dataPdf, setDataPdf }} ref={componentRef} />
+            <Pdf data={{ dataPdf, setDataPdf }} ref={componentRef} />;
           </div>
 
           <Select

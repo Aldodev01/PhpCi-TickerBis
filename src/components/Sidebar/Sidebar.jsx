@@ -151,32 +151,68 @@ const Sidebar = () => {
               marginTop: 10,
             }}
           />
-          <div className="sidebar-wrapper">
+          <div
+            className={"sidebar-wrapper"}
+            style={{ marginLeft: collapsed ? 10 : 0 }}
+          >
             <Menu className="sidebar_menu">
-              {menu.map((e) => (
-                <SubMenu
-                  key={e.id}
-                  title={e.title}
-                  icon={e.icon}
-                  className="sidebar-submenu"
-                >
-                  {e.submenu && (
-                    <Menu.ItemGroup key={e.id} title={e.title}>
-                      {e.submenu.map((a) => (
-                        <Menu.Item
-                          key={a.id}
-                          className="sidebar-submenu-item"
-                          onClick={() => {
-                            navigate(a.link);
-                          }}
+              {!collapsed
+                ? menu.map((e) => (
+                    <SubMenu
+                      key={e.id}
+                      title={
+                        <div
+                          className="flex-between w100"
+                          style={{ width: 120, gap: 20 }}
                         >
-                          {a.title}
-                        </Menu.Item>
-                      ))}
-                    </Menu.ItemGroup>
-                  )}
-                </SubMenu>
-              ))}
+                          {e.icon}
+                          <p className="flex-start-start" style={{ width: 65 }}>
+                            {e.title}
+                          </p>
+                        </div>
+                      }
+                      className="sidebar-submenu"
+                    >
+                      {e.submenu && (
+                        <Menu.ItemGroup key={e.id} title={e.title}>
+                          {e.submenu.map((a) => (
+                            <Menu.Item
+                              key={a.id}
+                              className="sidebar-submenu-item"
+                              onClick={() => {
+                                navigate(a.link);
+                              }}
+                            >
+                              {a.title}
+                            </Menu.Item>
+                          ))}
+                        </Menu.ItemGroup>
+                      )}
+                    </SubMenu>
+                  ))
+                : menu.map((e) => (
+                    <SubMenu
+                      key={e.id}
+                      icon={e.icon}
+                      className="sidebar-submenu"
+                    >
+                      {e.submenu && (
+                        <Menu.ItemGroup key={e.id} title={e.title}>
+                          {e.submenu.map((a) => (
+                            <Menu.Item
+                              key={a.id}
+                              className="sidebar-submenu-item"
+                              onClick={() => {
+                                navigate(a.link);
+                              }}
+                            >
+                              {a.title}
+                            </Menu.Item>
+                          ))}
+                        </Menu.ItemGroup>
+                      )}
+                    </SubMenu>
+                  ))}
             </Menu>
           </div>
           <Button

@@ -1,6 +1,10 @@
 import React, { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-const Home = lazy(() => import("../pages/Mobile/Home/Home"));
+const M_Home = lazy(() => import("../pages/Mobile/Client/Home/M_Home"));
+const M_CekTarif = lazy(() =>
+  import("../pages/Mobile/Client/Tools/M_CekTarif")
+);
+
 const NotFound = lazy(() => import("../pages//Error/404NotFound"));
 
 const MobileRoutes = () => {
@@ -10,7 +14,14 @@ const MobileRoutes = () => {
       exact: true,
       path: "/",
       name: "Dashboard",
-      component: <Home />,
+      component: <M_Home />,
+    },
+    {
+      key: 5,
+      exact: true,
+      path: "/mobile/tools/cektarif",
+      name: "Cek Tarif",
+      component: <M_CekTarif />,
     },
   ];
   return (

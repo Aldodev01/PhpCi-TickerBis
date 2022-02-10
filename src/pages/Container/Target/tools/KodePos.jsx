@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import { CgArrowsExchangeAltV } from "react-icons/cg";
 import { AiOutlineCopy } from "react-icons/ai";
 // import Lottie from "react-lottie";
-// import notFound from "../../../../assets/lottie/notfound.json";
-import Loading from "../../../../assets/lottie/loading.json";
+// import notFound from "../../../../shopping.jsonassets/lottie/notfound.json";
+import Loading from "../../../../assets/lottie/shopping.json";
 import signInLottie from "../../../../assets/lottie/signInLotie.json";
 import Lottie from "react-lottie";
 

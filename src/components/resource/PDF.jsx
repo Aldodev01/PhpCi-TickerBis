@@ -9,16 +9,10 @@ const defaultProps = {
 
 const Pdf = forwardRef((props, ref) => {
   const { dataPdf, setDataPdf } = props.data;
+  console.log(ref);
 
-  console.log(dataPdf);
-  if (!ref.current == undefined) {
+  if (ref.current == undefined) {
     return (
-      <div className="pdf-overlay" ref={ref}>
-        <p>as</p>
-      </div>
-    );
-  } else {
-    return ReactDom.createPortal(
       <>
         <div className="pdf-overlay" ref={ref}>
           {dataPdf ? (
@@ -26,17 +20,19 @@ const Pdf = forwardRef((props, ref) => {
               return (
                 <PdfData
                   noResi={e.resi}
-                  labelPickup={e.labelPickup}
                   namaPenerima={e.namaPenerima}
-                  telpToko={""}
-                  telpPenerima={""}
-                  alamatPenerima={""}
-                  tipePengiriman={""}
-                  nilaiCod={""}
+                  namaPengirim={e.labelPickup}
+                  telpPenerima={e.telpPenerima}
+                  telpPengirim={e.telpToko}
+                  alamatPenerima={e.alamatPenerima}
+                  alamatPengirim={`${e.provinsiPengirim} ${e.kotaPengirim} ${e.kelurahanPengirim} ${e.kelurahanPengirim}, ${e.kodePosPengirim}`}
+                  tipePengiriman={e.tipePengiriman}
+                  nilaiCod={e.nilaiCod}
                   orderId={e.orderId}
-                  deskripsiPaket={""}
-                  jumlahPaket={""}
-                  pesanKhusus={""}
+                  deskripsiPaket={e.deskripsiPaket}
+                  jumlahPaket={e.jumlahPaket}
+                  pesanKhusus={e.pesanKhusus}
+                  beratPaket={e.beratPaket}
                 />
               );
             })
@@ -44,8 +40,13 @@ const Pdf = forwardRef((props, ref) => {
             <p>loading</p>
           )}
         </div>
-      </>,
-      document.getElementById("pdf-root")
+      </>
+    );
+  } else {
+    return (
+      <div className="pdf-overlay" ref={ref}>
+        <p>as</p>
+      </div>
     );
   }
 });

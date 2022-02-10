@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
 const Signin = lazy(() => import("../pages/Mobile/Auth/SignIn"));
-const Signup = lazy(() => import("../pages/Mobile/Auth/SignIn"));
+const Signup = lazy(() => import("../pages/Mobile/Auth/SignUp"));
 
 const PublicMobile = () => {
   const routeser = [

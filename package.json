@@ -26,6 +26,7 @@
     "react-scripts": "4.0.3",
     "react-to-print": "^2.14.3",
     "web-vitals": "^1.0.1",
+    "swiper": "6.6.2",
     "zustand": "^3.6.7"
   },
   "scripts": {
