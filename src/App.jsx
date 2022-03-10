@@ -3,11 +3,10 @@ import { useContext, useEffect, useState } from "react";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Public from "./routes/Public";
 import CostumerService from "./components/CostumerService/CostumerService";
-import { UserContext } from "./context/UserContextProvider";
 import { UserAgenCheck } from "./utils/device/Device";
-import { UserActivity } from "./utils/Activity/UserActive";
 import PublicMobile from "./routes/PublicMobileRoutes";
 import M_Menubar from "./components/mobile/MenuBar/Menubar";
+import ConnectionRoutes from "./routes/Connection";
 function App() {
   const [token, setToken] = useState(null);
 
@@ -40,9 +39,33 @@ function App() {
     return;
   }
 
+  function UserAgent() {
+    if (UserAgenCheck) {
+      return <Mobile />;
+    } else {
+      return <Dekstop />;
+    }
+
+    return;
+  }
+
+  function WithoutDashboard() {
+    const pathname = window.location.pathname;
+    let checkIt = pathname.includes("shared-label");
+
+    if (checkIt == true) {
+      return <ConnectionRoutes />;
+    } else {
+      return <UserAgent />;
+    }
+
+    return;
+  }
+
   return (
     <>
-      {UserAgenCheck ? <Mobile /> : <Dekstop />}
+      {/* <UserAgent /> */}
+      <WithoutDashboard />
       {/* <Dekstop /> */}
       {/* {token ? (
         <>

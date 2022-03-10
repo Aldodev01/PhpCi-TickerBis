@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SmileOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import {
   Form,
@@ -11,25 +11,36 @@ import {
   Tooltip,
   Steps,
   AutoComplete,
+  InputNumber,
+  message,
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import "../order.less";
-import UploadCsv from "../../../../../components/Upload/UploadCsv";
-import { JSONOrderList } from "../../../../../json";
+import UploadCsv from "../../../../../../components/Upload/UploadCsv";
+import { JSONOrderList } from "../../../../../../json";
 import { RiFolderWarningFill } from "react-icons/ri";
+import { GetLocation } from "../../../../../../api/EXPEDITION";
+import { OrderContext } from "../../../../../../context/OrderContextProvider";
 const { Option } = Select;
 const { Step } = Steps;
 
-const SecondOrderCod = () => {
+const SecondOrderNonCod = () => {
   const [modal, setModal] = useState({
     visible: false,
   });
-
+  const [order, setOrder] = useContext(OrderContext);
   const [dataPackageControl, setDataPackageControl] = useState({
     selected: 0,
   });
+  const [optionAddress, setOptionAddress] = useState([]);
   const [value, setValue] = useState("");
-  const [options, setOptions] = useState([]);
+  const [getShipping, setGetShipping] = useState({
+    layananPaket: "REG",
+    kodePosAsal: "",
+    kodePosTujuan: "",
+    berat: "1",
+  });
+
   const [inputer, setInputer] = useState({
     alamatPenerima: "",
     beratPaket: 1,
@@ -40,6 +51,7 @@ const SecondOrderCod = () => {
     kodePosPenerima: "",
     layananPickup: "Reguler",
     namaPenerima: "",
+    nilaiBarang: 0,
     nilaiCod: 0,
     nilaiOngkir: 0,
     destinationCode: "",
@@ -72,15 +84,46 @@ const SecondOrderCod = () => {
     setValue(data);
   };
 
-  const onFinish = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        // Submit values
-        // submitValues(values);
-        console.log("Success:", values);
-      })
-      .catch((errorInfo) => {});
+  const onSelectAlamat = (data) => {
+    dataPackage[dataPackageControl.selected].alamatPenerima = data;
+  };
+
+  const onChangeAlamat = (data) => {
+    setValue(data);
+  };
+  const onSearchAlamat = (searchText) => {
+    const dataSesaat = [];
+    console.log("asds", searchText);
+    searchText.length > 4 &&
+      GetLocation(searchText)
+        .then(async (res) => {
+          console.log("ʕ´•ᴥ•`ʔ", res);
+          await res.data.content.map((e) => {
+            dataSesaat.push({
+              value: `Kel.${e.kelurahan}, Kec.${e.kecamatan}, Kota ${e.kota}, ${e.provinsi} ${e.kodePos}`,
+            });
+          });
+          await setOptionAddress(dataSesaat);
+        })
+        .catch((err) => {
+          message.error("ʕ´•ᴥ•`ʔ", 5);
+        });
+  };
+
+  const onFinish = (e) => {
+    setOrder({
+      ...order,
+      detail: dataPackage,
+    });
+    // form
+    //   .validateFields()
+    //   .then((values) => {
+    //     // Submit values
+    //     // submitValues(values);
+    //     console.log("Success:", values);
+    //   })
+    //   .catch((errorInfo) => {});
+    navigate("/dashboard/pengiriman/thirdOrder");
   };
 
   const [form] = Form.useForm();
@@ -103,9 +146,13 @@ const SecondOrderCod = () => {
     });
   };
 
+  const resetForm = () => {
+    form.resetFields();
+  };
+
   useEffect(() => {
     form.resetFields();
-  }, [dataPackage, dataPackageControl.selected]);
+  }, [dataPackageControl.selected]);
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle style={{ color: "white" }}>
@@ -144,7 +191,6 @@ const SecondOrderCod = () => {
     return false;
   });
 
-  console.log("dataPackage", dataPackage[dataPackageControl.selected]);
   return (
     <div className="secondOrder-wrapper">
       <div className="flex-start w100">
@@ -163,11 +209,11 @@ const SecondOrderCod = () => {
             }}
           />
           <Step
-            title="Waiting"
+            title="Waiting NONCOD"
             subTitle="Package Order"
             description="Isi Package Anda Terlebih Dahulu"
             onStepClick={() => {
-              navigate("/dashboard/pengiriman/secondOrder");
+              navigate("/dashboard/pengiriman/secondOrder/NONCOD");
             }}
           />
           <Step
@@ -186,14 +232,24 @@ const SecondOrderCod = () => {
             labelCol={{ span: 10 }}
             wrapperCol={{ span: 36 }}
             layout="vertical"
-            initialValues={{ remember: true }}
+            initialValues={{
+              namaPenerima:
+                dataPackage[dataPackageControl.selected].namaPenerima,
+              nomorTelpPenerima:
+                dataPackage[dataPackageControl.selected].nomorTelpPenerima,
+              alamatPenerima:
+                dataPackage[dataPackageControl.selected].alamatPenerima,
+              kelurahanPenerima:
+                dataPackage[dataPackageControl.selected].kelurahanPenerima,
+              beratPaket: dataPackage[dataPackageControl.selected].beratPaket,
+              isiPaket: dataPackage[dataPackageControl.selected].isiPaket,
+              pesanKhusus: dataPackage[dataPackageControl.selected].pesanKhusus,
+              nilaiCod: dataPackage[dataPackageControl.selected].nilaiCod,
+            }}
             onFinish={onFinish}
           >
             <h1 style={{ fontSize: 20 }}>Data Penerima</h1>
             <Form.Item
-              initialValue={
-                dataPackage[dataPackageControl.selected].namaPenerima
-              }
               label="Nama Penerima"
               name="namaPenerima"
               rules={[
@@ -208,13 +264,15 @@ const SecondOrderCod = () => {
               ]}
               hasFeedback
             >
-              <Input placeholder="Isi Nama Penerima" />
+              <Input
+                placeholder="Isi Nama Penerima"
+                onChange={(e) => {
+                  handleInput("namaPenerima", e.target.value);
+                }}
+              />
             </Form.Item>
             <Form.Item
-              initialValue={
-                dataPackage[dataPackageControl.selected].nomorTelpPenerima
-              }
-              name="noTelpPenerima"
+              name="nomorTelpPenerima"
               label="Nomor Telepon"
               rules={[
                 {
@@ -227,12 +285,12 @@ const SecondOrderCod = () => {
               <Input
                 addonBefore={prefixSelector}
                 placeholder="Isi Nomor Telepon Penerima"
+                onChange={(e) => {
+                  handleInput("nomorTelpPenerima", e.target.value);
+                }}
               />
             </Form.Item>
             <Form.Item
-              initialValue={
-                dataPackage[dataPackageControl.selected].alamatPenerima
-              }
               name="alamatPenerima"
               label="Alamat dan Panrokan Rumah"
               tooltip={{
@@ -246,12 +304,16 @@ const SecondOrderCod = () => {
                 },
               ]}
             >
-              <Input.TextArea showCount maxLength={200} rows={4} />
+              <Input.TextArea
+                showCount
+                maxLength={200}
+                rows={4}
+                onChange={(e) => {
+                  handleInput("alamatPenerima", e.target.value);
+                }}
+              />
             </Form.Item>
             <Form.Item
-              initialValue={
-                dataPackage[dataPackageControl.selected].kelurahanPenerima
-              }
               name="KelurahanPenerima"
               label="Kecamatan / Kota / Kode Pos"
               rules={[
@@ -262,11 +324,21 @@ const SecondOrderCod = () => {
               ]}
               hasFeedback
             >
-              <Input placeholder="Isi Kecamatan/ Kota/ Kodepos Penerima" />
+              <AutoComplete
+                options={optionAddress}
+                id="kelurahanPenerima"
+                defaultValue={
+                  dataPackage[dataPackageControl.selected].kelurahanPenerima
+                }
+                size="large"
+                onSelect={onSelectAlamat}
+                onSearch={onSearchAlamat}
+                placeholder="input here"
+              />
+              {/* //         <Input placeholder="Isi Kecamatan/ Kota/ Kodepos Penerima" /> */}
             </Form.Item>
             <h1 style={{ fontSize: 20 }}>Data Paket</h1>
             <Form.Item
-              initialValue={dataPackage[dataPackageControl.selected].beratPaket}
               name="beratPaket"
               label="Berat Paket"
               rules={[
@@ -280,12 +352,12 @@ const SecondOrderCod = () => {
               <Input
                 addonAfter={prefixSelector2}
                 placeholder="Isi Berat Paket (Kg)"
+                onChange={(e) => {
+                  handleInput("beratPaket", e.target.value);
+                }}
               />
             </Form.Item>
             <Form.Item
-              initialValue={
-                dataPackage[dataPackageControl.selected].deskripsiPaket
-              }
               name="isiPaket"
               label="Isi Paket"
               rules={[
@@ -296,12 +368,14 @@ const SecondOrderCod = () => {
               ]}
               hasFeedback
             >
-              <Input placeholder="Isi Paket" />
+              <Input
+                placeholder="Isi Paket"
+                onChange={(e) => {
+                  handleInput("isiPaket", e.target.value);
+                }}
+              />
             </Form.Item>
             <Form.Item
-              initialValue={
-                dataPackage[dataPackageControl.selected].pesanKhusus
-              }
               name="pesanKhusus"
               label="Instruksi Pengiriman"
               tooltip={{
@@ -319,7 +393,6 @@ const SecondOrderCod = () => {
             </Form.Item>
             <h1 style={{ fontSize: 20 }}>Data Pengiriman</h1>
             <Form.Item
-              initialValue={dataPackage[dataPackageControl.selected].nilaiCod}
               name="nilaiCod"
               label="Nilai Cod"
               rules={[
@@ -330,7 +403,13 @@ const SecondOrderCod = () => {
               ]}
               hasFeedback
             >
-              <Input addonBefore={prefixSelector3} placeholder="Nilai Cod" />
+              <Input
+                addonBefore={prefixSelector3}
+                placeholder="Nilai Cod"
+                onChange={(e) => {
+                  handleInput("nilaiCod", e.target.value);
+                }}
+              />
             </Form.Item>
             <Form.Item
               initialValue={
@@ -417,7 +496,7 @@ const SecondOrderCod = () => {
               //   setRemember(!remember);
               // }}
               >
-                Save to default setting
+                Really you want to use Asurance ?
               </Checkbox>
             </Form.Item>
             <br />
@@ -552,9 +631,10 @@ const SecondOrderCod = () => {
         proModal={{ modal, setModal }}
         data={{ dataPackage, setDataPackage }}
         inputPayload={{ inputer, setInputer }}
+        reset={resetForm}
       />
     </div>
   );
 };
 
-export default SecondOrderCod;
+export default SecondOrderNonCod;

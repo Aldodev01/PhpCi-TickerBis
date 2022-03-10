@@ -1,27 +1,51 @@
 import React, { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-const DetailHistory = lazy(() =>
-  import("../pages/Container/Target/orderHistory/DetailHistory")
-);
+/**
+ * Pages Group Dashboard
+ * ==========================================================
+ * @description:
+ */
 const HomeSeller = lazy(() =>
   import("../pages/Container/Target/home/HomeSeller")
 );
-const OrderHistory = lazy(() =>
-  import("../pages/Container/Target/orderHistory/OrderHistory")
-);
-const ThridOrder = lazy(() =>
-  import("../pages/Container/Target/order/third/ThirdOrder")
-);
-const Sidebar = lazy(() => import("../components/Sidebar/Sidebar"));
-const NotFound = lazy(() => import("../pages/Error/404NotFound"));
+
+/**
+ * Pages Group Order
+ * ==========================================================
+ * @description:
+ */
 const NewOrder = lazy(() =>
-  import("../pages/Container/Target/order/first/NewOrder")
+  import("../pages/Container/Target/Contract/order/first/NewOrder")
 );
 const SecondOrderCod = lazy(() =>
-  import("../pages/Container/Target/order/second/SecondOrderCod")
+  import("../pages/Container/Target/Contract/order/second/SecondOrderCod")
 );
+const SecondOrderNonCod = lazy(() =>
+  import("../pages/Container/Target/Contract/order/second/SecondOrderNonCod")
+);
+const ThridOrder = lazy(() =>
+  import("../pages/Container/Target/Contract/order/third/ThirdOrder")
+);
+/**
+ * Pages Group OrderHistory
+ * ==========================================================
+ * @description:
+ */
+const OrderHistory = lazy(() =>
+  import("../pages/Container/Target/Contract/orderHistory/OrderHistory")
+);
+const DetailHistory = lazy(() =>
+  import("../pages/Container/Target/Contract/orderHistory/DetailHistory")
+);
+const TrackingHistory = lazy(() =>
+  import("../pages/Container/Target/Contract/orderHistory/TrackingHistory")
+);
+
+const Sidebar = lazy(() => import("../components/Sidebar/Sidebar"));
+const NotFound = lazy(() => import("../pages/Error/404NotFound"));
+
 const Monitoring = lazy(() =>
-  import("../pages/Container/Target/monitoring/Monitoring")
+  import("../pages/Container/Target/Contract/monitoring/Monitoring")
 );
 const CekTarif = lazy(() => import("../pages/Container/Target/tools/CekTarif"));
 const KodePos = lazy(() => import("../pages/Container/Target/tools/KodePos"));
@@ -64,33 +88,47 @@ const ProtectedRoutes = () => {
     {
       key: 4,
       exact: true,
-      path: "/dashboard/pengiriman/secondOrder",
-      name: "Second order",
+      path: "/dashboard/pengiriman/secondOrder/COD",
+      name: "Second order COD",
       component: <SecondOrderCod />,
     },
     {
       key: 5,
+      exact: true,
+      path: "/dashboard/pengiriman/secondOrder/NONCOD",
+      name: "Second order NON COD",
+      component: <SecondOrderNonCod />,
+    },
+    {
+      key: 6,
       exact: true,
       path: "/dashboard/pengiriman/thirdOrder",
       name: "Third Order",
       component: <ThridOrder />,
     },
     {
-      key: 6,
+      key: 7,
       exact: true,
       path: "/dashboard/pengiriman/history",
       name: "Order History",
       component: <OrderHistory />,
     },
     {
-      key: 6,
+      key: 8,
       exact: true,
       path: "/dashboard/pengiriman/detail-history/:id",
-      name: "DEtail History",
+      name: "Detail History",
       component: <DetailHistory />,
     },
     {
-      key: 10,
+      key: 9,
+      exact: true,
+      path: "/dashboard/pengiriman/history/tracking/:expedisi/:awb",
+      name: "Order History",
+      component: <TrackingHistory />,
+    },
+    {
+      key: 19,
       exact: true,
       path: "/dashboard/pengiriman/monitoring",
       name: " Monitoring",

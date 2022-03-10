@@ -3,11 +3,12 @@ import dateFilter from "./myDate";
 var date = new Date();
 let d = new Date();
 
-date.setMonth(date.getMonth() - 1);
+date.setMonth(date.getMonth());
 let mm = date.toLocaleDateString().split("/")[0];
 let dd = date.toLocaleDateString().split("/")[1];
 let yyyy = date.toLocaleDateString().split("/")[2];
 export const getFirst = dd + "-" + mm + "-" + yyyy;
+export const getFrist2 = yyyy + "-" + mm + "-" + dd;
 export const getLast = dateFilter?.basicDate(d).upNormal;
 
 // var firstDay = new Date(date.getFullYear(), date.getMonth(), 1);

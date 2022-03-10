@@ -13,11 +13,11 @@ import { useNavigate } from "react-router-dom";
 import {
   GetOrderHistory,
   GetOrderHistoryByDate,
-} from "../../../../api/HISTORY";
-import { UserContext } from "../../../../context/UserContextProvider";
-import currency from "../../../../utils/currency/Currency";
-import dateFilter from "../../../../utils/date/myDate";
-import { getFirst, getLast } from "../../../../utils/date/SummaryDate";
+} from "../../../../../api/HISTORY";
+import { UserContext } from "../../../../../context/UserContextProvider";
+import currency from "../../../../../utils/currency/Currency";
+import dateFilter from "../../../../../utils/date/myDate";
+import { getFirst, getLast } from "../../../../../utils/date/SummaryDate";
 
 const OrderHistory = () => {
   const { Column, ColumnGroup } = Table;
@@ -200,7 +200,7 @@ const OrderHistory = () => {
               <Button
                 onClick={() => {
                   navigate(
-                    `/dashboard/pengiriman/detail-history/:${record.idTransaksi}`
+                    `/dashboard/pengiriman/detail-history/:${record.id}`
                   );
                 }}
               >

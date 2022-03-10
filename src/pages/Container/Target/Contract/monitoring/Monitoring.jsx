@@ -1,31 +1,36 @@
 //! REACT
-import React, {
-  createRef,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { DatePicker, message, Select, Space, Button } from "antd";
+import { DatePicker, message, Select, Space } from "antd";
 
 //! CONTEXT
-import { UserContext } from "../../../../context/UserContextProvider";
+import { UserContext } from "../../../../../context/UserContextProvider";
 
 //! COMPONENT && ASSETS && UTILS
 import "./Monitoring.less";
-import CardSummary from "../../../../components/CardSummary/CardSummary";
-import UserMonitoring from "../../../../components/table/UserMonitoring";
-import MyLottie from "../../../../components/Lottie/MyLottie";
-import waitingPickup from "../../../../assets/lottie/waitingPickup.json";
-import loading from "../../../../assets/lottie/loading.json";
-import { getFirst, getLast } from "../../../../utils/date/SummaryDate";
+import UserMonitoring from "../../../../../components/table/UserMonitoring";
+import MyLottie from "../../../../../components/Lottie/MyLottie";
+import waitingPickupLottie from "../../../../../assets/lottie/waitingPickup.json";
+import loading from "../../../../../assets/lottie/loading.json";
+import { getFirst, getLast } from "../../../../../utils/date/SummaryDate";
+import CardSummary2 from "../../../../../components/CardSummary/CardSummary2";
 
 //! API
-import { MonitoringTable } from "../../../../api/MONITORING";
-import Pdf from "../../../../components/resource/PDF";
-import ReactToPrint from "react-to-print";
+import { MonitoringTable } from "../../../../../api/MONITORING";
+import SwiperCore, {
+  Pagination as Paginationer,
+  Navigation,
+} from "swiper/core";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/swiper.min.css";
+import "swiper/components/effect-coverflow/effect-coverflow.min.css";
+import "swiper/components/pagination/pagination.min.css";
+import "swiper/components/navigation/navigation.min.css";
+SwiperCore.use([Paginationer]);
+SwiperCore.use([Navigation]);
 const Monitoring = () => {
   //! CONFIG ANTD
   const { Option } = Select;
@@ -35,7 +40,13 @@ const Monitoring = () => {
 
   // ! STATE
   const [tableData, setTableData] = useState(null);
-  const [dataPdf, setDataPdf] = useState([]);
+  const [waitingPickup, setWaitingPickup] = useState("");
+  const [shipped, setShipped] = useState("");
+  const [RTS, setRTS] = useState("");
+  const [problem, setProblem] = useState("");
+  const [cancel, setCancel] = useState("");
+  const [delivered, setDelivered] = useState("");
+  const [shipmentProblem, setShipmentProblem] = useState("");
   const [payloadTable, setPayloadTable] = useState({
     tipePengiriman: null,
     pickupId: null,
@@ -49,10 +60,6 @@ const Monitoring = () => {
     statusPembayaran: null,
     tipePengiriman: null,
   });
-  const [pdf, setPdf] = useState({
-    isModal: false,
-  });
-  const componentRef = createRef();
 
   //! Use Query IS HERE
   const {
@@ -67,7 +74,6 @@ const Monitoring = () => {
   useEffect(() => {
     if (table_data) {
       setTableData(table_data?.data?.content);
-      setDataPdf(table_data?.data?.content);
     }
   }, [table_data]);
 
@@ -77,36 +83,76 @@ const Monitoring = () => {
         <h1 style={{ fontSize: "2rem" }}>Monitoring</h1>
       </Space>
       <div className="seller-monitoring-head">
-        <CardSummary
-          icon={waitingPickup}
-          background={"#ed0678"}
-          title={"Menunggu Dipickup"}
-          count={10}
-        />
-        <CardSummary
-          icon={waitingPickup}
-          background={"#faad14"}
-          title={"Dalam Pengiriman"}
-          count={10}
-        />{" "}
-        <CardSummary
-          icon={waitingPickup}
-          background={"#5e34aa"}
-          title={"Terkirim"}
-          count={10}
-        />{" "}
-        <CardSummary
-          icon={waitingPickup}
-          background={"#1ec9ff"}
-          title={"Pengiriman Bermasalah"}
-          count={10}
-        />
-        <CardSummary
-          icon={waitingPickup}
-          background={"#ed0678"}
-          title={"Return To Shipper"}
-          count={10}
-        />
+        <Swiper
+          // effect={"coverflow"}
+          pagination={{
+            dynamicBullets: true,
+          }}
+          navigation={true}
+          grabCursor={true}
+          centeredSlides={false}
+          slidesPerView={"auto"}
+          coverflowEffect={{
+            rotate: 50,
+            stretch: 0,
+            depth: 100,
+            modifier: 1,
+            slideShadows: true,
+          }}
+          style={{
+            width: "100%",
+            display: "flex",
+            gap: "20px",
+            alignItems: "flex-end",
+            justifyContent: "center",
+            padding: "20px",
+          }}
+        >
+          <SwiperSlide
+            style={{ width: 70 }}
+            className="swiper-slide"
+          ></SwiperSlide>
+          <SwiperSlide style={{ width: 300 }} className="swiper-slide">
+            <CardSummary2
+              icon={waitingPickupLottie}
+              background={"#ed0678"}
+              title={"Menunggu Dipickup"}
+              count={10}
+            />
+          </SwiperSlide>
+          <SwiperSlide style={{ width: 300 }} className="swiper-slide">
+            <CardSummary2
+              icon={waitingPickupLottie}
+              background={"#faad14"}
+              title={"Dalam Pengiriman"}
+              count={10}
+            />{" "}
+          </SwiperSlide>
+          <SwiperSlide style={{ width: 300 }} className="swiper-slide">
+            <CardSummary2
+              icon={waitingPickupLottie}
+              background={"#5e34aa"}
+              title={"Terkirim"}
+              count={10}
+            />{" "}
+          </SwiperSlide>
+          <SwiperSlide style={{ width: 300 }} className="swiper-slide">
+            <CardSummary2
+              icon={waitingPickupLottie}
+              background={"#1ec9ff"}
+              title={"Pengiriman Bermasalah"}
+              count={10}
+            />
+          </SwiperSlide>
+          <SwiperSlide style={{ width: 300 }} className="swiper-slide">
+            <CardSummary2
+              icon={waitingPickupLottie}
+              background={"#ed0678"}
+              title={"Return To Shipper"}
+              count={10}
+            />
+          </SwiperSlide>
+        </Swiper>
       </div>
       <div className="seller-monitoring-container">
         <Space>
@@ -132,22 +178,6 @@ const Monitoring = () => {
             />
           </Space>
           {/*  */}
-
-          <ReactToPrint
-            trigger={() => (
-              <Button
-                style={{
-                  position: "relative",
-                }}
-              >
-                MODAL
-              </Button>
-            )}
-            content={() => componentRef.current}
-          />
-          <div style={{ display: "none" }}>
-            <Pdf data={{ dataPdf, setDataPdf }} ref={componentRef} />;
-          </div>
 
           <Select
             showSearch

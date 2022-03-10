@@ -18,6 +18,7 @@
     "react-barcodes": "^1.2.0",
     "react-chartjs-2": "^4.0.0",
     "react-dom": "^17.0.2",
+    "react-google-recaptcha": "^2.1.0",
     "react-icons": "^4.3.1",
     "react-lottie": "^1.2.3",
     "react-papaparse": "^4.0.2",
@@ -25,8 +26,8 @@
     "react-router-dom": "^6.1.1",
     "react-scripts": "4.0.3",
     "react-to-print": "^2.14.3",
-    "web-vitals": "^1.0.1",
     "swiper": "6.6.2",
+    "web-vitals": "^1.0.1",
     "zustand": "^3.6.7"
   },
   "scripts": {

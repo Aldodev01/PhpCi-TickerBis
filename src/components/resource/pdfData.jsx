@@ -2,6 +2,7 @@ import React from "react";
 import "./PDF.less";
 import logo from "../../assets/lib/imezi-logo.svg";
 import jne from "../../assets/lib/jne.png";
+import { Truncate } from "../../utils/Truncate/Truncate";
 
 import { useBarcode } from "react-barcodes";
 
@@ -21,6 +22,11 @@ const PdfData = ({
   telpPengirim,
   beratPaket,
 }) => {
+  /**
+   * Biar bisa di Scan tolol
+   * ====================================================
+   * @param {String} value  - value yang di scan
+   */
   const GenerateBarcode = ({ value }) => {
     const { inputRef } = useBarcode({
       value: value,
@@ -32,6 +38,11 @@ const PdfData = ({
     });
     return <svg ref={inputRef} style={{ width: "100%" }} />;
   };
+  /**
+   * Biar bisa di Scan tolol
+   * ====================================================
+   * @param {String} value  - value yang di scan
+   */
   const GenerateBarcode2 = ({ value }) => {
     const { inputRef } = useBarcode({
       value: value,
@@ -80,7 +91,7 @@ const PdfData = ({
               <div className="pdf-column margin-left10 ">
                 <b className="font-10 ">Penerima : {namaPenerima}</b>
                 <p className="font-10 ">{telpPenerima}</p>
-                <p className="font-10 ">{alamatPenerima}</p>
+                <p className="font-10 ">{Truncate(alamatPenerima, 140)}</p>
               </div>
             </div>
           </div>

@@ -32,9 +32,9 @@ const Sidebar = () => {
   const [menu, SetMenu] = useContext(MenuContext);
   const [user, setUser] = useContext(UserContext);
   const deadline = Date.now() + 1000 * 60 * 60 * 1 * 1 + 1000 * 30;
-  navigator.getBattery().then((battery) => console.log(battery));
-  console.log(navigator.connection);
-
+  // navigator.getBattery().then((battery) => console.log(battery));
+  // console.log(navigator.connection);
+  console.log(user);
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
 
@@ -113,19 +113,30 @@ const Sidebar = () => {
   useEffect(() => {
     const result = AuthGetAccount()
       .then((res) => {
+        console.log("asu", res);
         setUser({
+          ...user,
           role: res.data.user[0].name,
           username: res.data.user[0].nama,
           email: res.data.user[0].email,
           validDate: res.data.validateAt,
           idUser: res.data.id,
           photo: res.data.fotoSelfie,
+          user: {
+            ...user.user,
+            kodeToko: res.data.kodeToko,
+          },
         });
       })
       .catch((err) => {
-        message.error("Ocurrió un error en el servidor al iniciar sesión");
+        message.error(
+          "Ocurrió un error en el servidor al iniciar sesión aldodevv",
+          3
+        );
         localStorage.clear();
+        sessionStorage.clear();
         navigate("/");
+        window.location.reload();
       });
   }, []);
 
@@ -261,6 +272,12 @@ const Sidebar = () => {
               size="large"
               defaultValue={"JNE"}
               optionFilterProp="children"
+              onChange={(value) => {
+                setUser({
+                  ...user,
+                  expedisi: value,
+                });
+              }}
               filterOption={(input, option) =>
                 option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
               }
@@ -270,7 +287,10 @@ const Sidebar = () => {
                   .localeCompare(optionB.children.toLowerCase())
               }
             >
-              <Option value="JNE">JNE</Option>
+              <Option value="9a3ec075-649c-4c70-82d5-9a56abc1d805">JNE</Option>
+              <Option value="999999-ddddd-undefined-99999-00">
+                J&T Express
+              </Option>
             </Select>
             <AutoComplete
               dropdownClassName="certain-category-search-dropdown"

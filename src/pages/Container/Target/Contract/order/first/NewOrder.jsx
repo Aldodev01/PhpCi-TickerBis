@@ -18,35 +18,60 @@ import {
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import "../order.less";
-import { getFirst } from "../../../../../utils/date/SummaryDate";
-import { PickupGet } from "../../../../../api/PICKUP";
-import { UserContext } from "../../../../../context/UserContextProvider";
+import { getFirst, getFrist2 } from "../../../../../../utils/date/SummaryDate";
+import { PickupGet } from "../../../../../../api/PICKUP";
+import { UserContext } from "../../../../../../context/UserContextProvider";
+import { OrderContext } from "../../../../../../context/OrderContextProvider";
+import { GetAddressFrom } from "../../../../../../api/SENDING";
+import { ExpeditionGet } from "../../../../../../api/EXPEDITION";
 const { Option } = Select;
 const { Step } = Steps;
 const NewOrder = () => {
   const [user, setUser] = useContext(UserContext);
+  const [order, setOrder] = useContext(OrderContext);
   const [address, setAddress] = useState(null);
+  const [expedisi, setExpedisi] = useState(null);
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [dataOrder, setDataOrder] = useState({
     ekspedisi: "JNE",
     tipePengiriman: "COD",
-    tanggalPickup: getFirst,
+    tanggalPickup: getFrist2,
     kendaraanPaket: "MOTOR",
     pengembalianId: "",
-    tipePickup: "Pickup",
+    tipePickup: "Pick Up",
     alamatPickup: {
       id: "",
       kodePos: "",
     },
   });
 
+  function disabledDate(current) {
+    var date = new Date();
+    date.setDate(date.getDate() - 1);
+    // Can not select days before today and today
+    return current && current < date;
+  }
   const handleChange = (e) => {
     setDataOrder({
       ...dataOrder,
       alamatPickup: {
-        id: address[e].id,
-        kodePos: address[e].kodePos.trim(),
+        id: e[2],
+        kodePos: e[4]?.trim(),
+      },
+    });
+
+    setOrder({
+      ...order,
+      pickupId: e[2],
+      pengembalianId: e[2],
+      other1: {
+        ...order.other1,
+        kodePosAsal: e[4]?.trim(),
+        originCode: e[5],
+        kecamatanAsal: e[3],
+        alamatId: e[2],
+        alamatLengkap: e[1],
       },
     });
   };
@@ -56,7 +81,7 @@ const NewOrder = () => {
     }
     return false;
   });
-
+  console.log(order);
   function checkProperties(obj) {
     for (var key in obj) {
       console.log(key);
@@ -67,10 +92,36 @@ const NewOrder = () => {
 
   const onFinish = (values) => {
     console.log("values", values);
-    navigate("/dashboard/pengiriman/secondOrder");
     setDataOrder({
       ...values,
       tanggalPickup: getFirst,
+    });
+
+    setOrder({
+      ...order,
+      tanggalPickup: dataOrder.tanggalPickup,
+      kendaraanPaket: values.kendaraan,
+      tipePengiriman: dataOrder.tipePengiriman,
+      other1: {
+        ...order.other1,
+        expedisiId: expedisi[0].id,
+      },
+      tipePickup: values.tipePickup,
+    });
+    if (values.tipePengiriman === "COD") {
+      navigate(`/dashboard/pengiriman/secondOrder/COD`);
+    } else {
+      navigate(`/dashboard/pengiriman/secondOrder/NONCOD`);
+    }
+  };
+
+  const onChangeExpedisi = (e) => {
+    setOrder({
+      ...order,
+      other1: {
+        ...order.other1,
+        expedisiId: expedisi[e].id,
+      },
     });
   };
 
@@ -80,7 +131,7 @@ const NewOrder = () => {
 
   useEffect(() => {
     if (user.idUser) {
-      PickupGet(user.idUser, 5)
+      GetAddressFrom(user.idUser)
         .then((res) => {
           setAddress(res.data.content);
         })
@@ -92,10 +143,18 @@ const NewOrder = () => {
     }
   }, [user]);
 
-  console.log("address", address);
-  const handleTelegramResponse = (response) => {
-    console.log(response);
-  };
+  useEffect(() => {
+    ExpeditionGet()
+      .then((res) => {
+        setExpedisi(res.data.content);
+      })
+      .catch((err) => {
+        message.error(
+          "Настана грешка при преземањето на податоците за превоз",
+          3
+        );
+      });
+  }, []);
 
   return (
     <div>
@@ -162,16 +221,17 @@ const NewOrder = () => {
             >
               <Select
                 size="large"
-                defaultValue={"JNE"}
+                defaultValue={0}
                 placeholder="Ekspedisi"
-                onChange={(e) => {
-                  setDataOrder({
-                    ...dataOrder,
-                    ekspedisi: e,
-                  });
-                }}
+                onChange={onChangeExpedisi}
               >
-                <Option value="JNE">JNE</Option>
+                {expedisi ? (
+                  expedisi.map((e, i) => <Option value={i}>{e.nama}</Option>)
+                ) : (
+                  <Option value={0} disabled>
+                    Loading ...
+                  </Option>
+                )}
               </Select>
             </Form.Item>
             <Form.Item
@@ -222,7 +282,7 @@ const NewOrder = () => {
                 defaultValue={dataOrder.tipePickup}
                 placeholder="Tipe Pengiriman"
               >
-                <Option value="Pickup">Pick up</Option>
+                <Option value="Pick Up">Pick up</Option>
               </Select>
             </Form.Item>
             <Form.Item
@@ -244,18 +304,32 @@ const NewOrder = () => {
                 size="large"
                 placeholder="Tipe Pengiriman"
                 onChange={handleChange}
-                defaultValue={dataOrder != null && 0}
               >
-                {address !== null &&
-                  address.map((item, index) => (
-                    <Option value={index}>{item.label}</Option>
-                  ))}
+                {address !== null ? (
+                  address.map((e, index) => (
+                    <Option
+                      value={[
+                        e.label,
+                        `${e.alamat} Kel.${e.kelurahan}, Kec.${e.kecamatan}, ${e.kota}, ${e.provinsi}, ${e.kodePos}`,
+                        e.id,
+                        e.kecamatan,
+                        e.kodePos,
+                        e.originCode,
+                      ]}
+                    >
+                      {e.label}
+                    </Option>
+                  ))
+                ) : (
+                  <Option value={0}>Loading...</Option>
+                )}
               </Select>
             </Form.Item>
             <Form.Item label="Tanggal Penjemputan">
               <DatePicker
-                placeholder={getFirst}
-                format="DD-MM-YYYY"
+                placeholder={getFrist2}
+                disabledDate={disabledDate}
+                format="YYYY-MM-DD"
                 size="large"
                 onChange={(date, dateString) => {
                   setDataOrder({

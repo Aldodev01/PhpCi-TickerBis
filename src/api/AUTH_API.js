@@ -34,6 +34,35 @@ export const AuthSignIn = async (data) => {
   }
 };
 
+export const AuthResetPassword = async (email) => {
+  try {
+    const result = await contextApi(`/auth/password/lupa?emailhp=${email}`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+    });
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const AuthCreateAccount = async (data) => {
+  try {
+    const result = await contextApi(`/auth/signup`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      data: data,
+    });
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+
 // export const AuthSignUp = async (data) => {
 //   try {
 //     const result = await contextApi("/auth/signup", {

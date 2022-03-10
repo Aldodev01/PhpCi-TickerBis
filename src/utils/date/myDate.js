@@ -125,6 +125,15 @@ const basicDate = (date) => {
   };
 };
 
+function _formatDate(input) {
+  const datePart = input.match(/\d+/g),
+    year = datePart[0].substring(),
+    month = datePart[1],
+    day = datePart[2];
+
+  return day + "-" + month + "-" + year;
+}
+
 const dateFilter = {
   basicDate,
   getDate,
@@ -132,6 +141,7 @@ const dateFilter = {
   getFullDate,
   getTime,
   getTimezone,
+  _formatDate,
 };
 
 export default dateFilter;

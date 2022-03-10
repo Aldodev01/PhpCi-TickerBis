@@ -1,17 +1,31 @@
-import { Button, message, Space, Table, Tooltip, Drawer } from "antd";
+import {
+  Button,
+  message,
+  Space,
+  Table,
+  Tooltip,
+  Drawer,
+  Popconfirm,
+} from "antd";
 import React, { useContext, useEffect, useState } from "react";
-import { UserGet } from "../../../../../api/USER";
+import { UserDelete, UserGet } from "../../../../../api/USER";
 import { UserContext } from "../../../../../context/UserContextProvider";
 import { FaUserEdit } from "react-icons/fa";
 import { AiOutlineUserDelete } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import logoin from "../../../../../assets/lib/imezi-logo.svg";
-import UserSetting from "../../../../../components/editForm/UserSetting";
+import UserSetting from "../../../../../components/MyForm/UserSetting";
+import UserCreate from "../../../../../components/MyForm/CreateUser";
+import { BsFillPersonPlusFill } from "react-icons/bs";
 
 const User = () => {
   const [dataTable, setDataTable] = useState(null);
   const [user, setUser] = useContext(UserContext);
   const [drawerNeed, setDrawerNeed] = useState({
+    drawer: false,
+    data: null,
+  });
+  const [drawerNeed2, setDrawerNeed2] = useState({
     drawer: false,
     data: null,
   });
@@ -23,15 +37,20 @@ const User = () => {
   });
 
   useEffect(() => {
+    if (user.idUser) {
+      GettingUser();
+    }
+  }, [user]);
+
+  const GettingUser = () => {
     UserGet(user.idUser, payload.page, payload.size)
       .then((res) => {
-        console.log(res.data.content);
         setDataTable(res.data.content);
       })
       .catch((error) => {
         message.error("Ocurrió un error en el servidor al iniciar sesión");
       });
-  }, []);
+  };
 
   const columns = [
     {
@@ -59,25 +78,49 @@ const User = () => {
       key: "x",
       render: (t, r, i) => (
         <Space>
-          <Tooltip
-            title="Edit User"
-            color={"#5e34aa"}
-            onClick={() => {
-              setDrawerNeed({
-                ...drawerNeed,
-                drawer: !drawerNeed.drawer,
-                data: r,
-              });
-            }}
-          >
-            <Button type="primary" size="large">
+          <Tooltip title="Edit User" color={"#5e34aa"}>
+            <Button
+              type="primary"
+              size="large"
+              onClick={() => {
+                setDrawerNeed({
+                  ...drawerNeed,
+                  drawer: !drawerNeed.drawer,
+                  data: r,
+                });
+              }}
+            >
               <FaUserEdit />
             </Button>
           </Tooltip>
+
           <Tooltip title="Hapus User" color={"#ed0678"}>
-            <Button type="danger" size="large">
-              <AiOutlineUserDelete />
-            </Button>
+            <Popconfirm
+              title="Are you sure to delete this user?"
+              onConfirm={() => {
+                UserDelete(user.idUser, r.id)
+                  .then((res) => {
+                    console.log(res);
+                    message.success("Success");
+                    GettingUser();
+                  })
+                  .catch((error) => {
+                    message.error(
+                      "Ocurrió un error en el servidor al iniciar sesión"
+                    );
+                  });
+              }}
+              onCancel={() => {
+                message.info("Canceled");
+              }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Button type="danger" size="large">
+                <AiOutlineUserDelete />
+              </Button>
+            </Popconfirm>
+            ,
           </Tooltip>
         </Space>
       ),
@@ -92,6 +135,22 @@ const User = () => {
 
   return (
     <div>
+      <Button
+        type="primary"
+        onClick={() => {
+          setDrawerNeed2({
+            ...drawerNeed2,
+            drawer: !drawerNeed2.drawer,
+          });
+        }}
+      >
+        <Space>
+          <BsFillPersonPlusFill style={{ fontSize: 20 }} /> Tambah User
+        </Space>
+      </Button>
+      <br />
+      <br />
+
       <Table
         columns={columns}
         bordered
@@ -117,7 +176,28 @@ const User = () => {
         }}
         visible={drawerNeed.drawer}
       >
-        <UserSetting action={{ drawerNeed, setDrawerNeed }} />
+        <UserSetting action={{ drawerNeed, setDrawerNeed }} get={GettingUser} />
+      </Drawer>
+      <Drawer
+        title={
+          <Space>
+            <img src={logoin} /> <p style={{ marginTop: 20 }}>User Create</p>
+          </Space>
+        }
+        placement="right"
+        width={500}
+        onClose={() => {
+          setDrawerNeed2({
+            ...drawerNeed2,
+            drawer: !drawerNeed2.drawer,
+          });
+        }}
+        visible={drawerNeed2.drawer}
+      >
+        <UserCreate
+          action={{ drawerNeed2, setDrawerNeed2 }}
+          get={GettingUser}
+        />
       </Drawer>
     </div>
   );

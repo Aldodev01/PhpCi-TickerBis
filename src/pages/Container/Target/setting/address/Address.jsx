@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { PickupGet, PickupPut } from "../../../../../api/PICKUP";
+import loading from "../../../../../assets/lottie/loading.json";
 import { UserContext } from "../../../../../context/UserContextProvider";
 import {
   PageHeader,
@@ -10,11 +11,28 @@ import {
   message,
   Switch,
   Tooltip,
+  Space,
+  Modal,
+  Popconfirm,
+  Avatar,
 } from "antd";
 import dateFilter from "../../../../../utils/date/myDate";
+import MyLottie from "../../../../../components/Lottie/MyLottie";
+import { BsPlusSquareFill } from "react-icons/bs";
+import AddAdress from "./AddAddress";
+import { MdDeleteSweep } from "react-icons/md";
+import { AkunDeleteAddress } from "../../../../../api/AKUN";
+import { VscCheckAll } from "react-icons/vsc";
+import { RiCloseFill } from "react-icons/ri";
+import "./address.less";
 const { TabPane } = Tabs;
 const Address = () => {
   const [user, setUser] = useContext(UserContext);
+  const [addAdd, setAddAdd] = useState({
+    modal: false,
+    data: null,
+  });
+
   const [address, setAddress] = useState(null);
   useEffect(() => {
     if (user.idUser) {
@@ -41,27 +59,102 @@ const Address = () => {
     </div>
   );
 
-  console.log(address);
+  const handleModal = () => {
+    setAddAdd({
+      ...addAdd,
+      modal: !addAdd.modal,
+    });
+  };
+
   return (
     <div>
-      {address &&
+      <Button type="primary" onClick={handleModal} size="large">
+        <Space>
+          <BsPlusSquareFill style={{ fontSize: 20 }} /> Tambah Alamat Baru
+        </Space>
+      </Button>
+      <br />
+      <br />
+
+      {address ? (
         address.map((e, i) => (
           <PageHeader
             className="site-page-header-responsive"
             title={e.label}
             subTitle={e.telp}
             extra={[
-              <Tooltip title="Setel Rekening Sebagai Default">
-                <Button key="3" type="primary">
-                  Edit
-                </Button>
-              </Tooltip>,
-              <Tooltip title="Hapus Alamat">
-                <Button key="2" type="danger">
-                  Delete
-                </Button>
-              </Tooltip>,
-              ,
+              e.enabled === false ? (
+                <Space>
+                  <Tooltip
+                    title={"Alamatmu belum di verifikasi"}
+                    color={"#ed0678"}
+                  >
+                    <div className="address-verified w100 flex-center">
+                      <p
+                        style={{
+                          color: "white",
+                          marginTop: 10,
+                          marginLeft: 10,
+                        }}
+                      >
+                        Alamatmu belum di verifikasi
+                      </p>
+                      <RiCloseFill className="address-icon-noncheck add-icon" />
+                    </div>
+                  </Tooltip>
+                  <Tooltip title="Setel Alamat Sebagai Default">
+                    <Button size="large" key="3" type="primary">
+                      Ubah
+                    </Button>
+                  </Tooltip>
+                </Space>
+              ) : (
+                <Space>
+                  <Tooltip
+                    title={"Alamat mu sudah Terverifikasi"}
+                    color={"#1ec9ff"}
+                  >
+                    <div className="address-verified w100 flex-center">
+                      <p
+                        style={{
+                          color: "white",
+                          marginTop: 10,
+                          marginLeft: 10,
+                        }}
+                      >
+                        Terverifikasi
+                      </p>
+                      <VscCheckAll className="address-icon-check add-icon" />
+                    </div>
+                  </Tooltip>
+                  <Tooltip title="Hapus Rekening">
+                    <Popconfirm
+                      title="Are you sure？"
+                      icon={
+                        <MdDeleteSweep style={{ color: "red", fontSize: 20 }} />
+                      }
+                      onConfirm={() => {
+                        AkunDeleteAddress(user.idUser, e.id)
+                          .then((res) => {
+                            console.log(res);
+                            if (res.status === 200) {
+                              message.success("Успешно избришано", 3);
+                              getFirstData();
+                            }
+                          })
+                          .catch((err) => {
+                            getFirstData();
+                            message.error("Настана грешка при избришањето", 3);
+                          });
+                      }}
+                    >
+                      <Button size="large" type="danger">
+                        Hapus
+                      </Button>
+                    </Popconfirm>
+                  </Tooltip>
+                </Space>
+              ),
             ]}
           >
             <Content>
@@ -104,7 +197,26 @@ const Address = () => {
               </Descriptions>
             </Content>
           </PageHeader>
-        ))}
+        ))
+      ) : (
+        <div className="flex-column-center w100">
+          <div style={{ maxWidth: 500 }}>
+            <MyLottie lottie={loading} />
+          </div>
+        </div>
+      )}
+
+      <Modal
+        title="Tambahkan Alamat mu Disini"
+        centered
+        visible={addAdd.modal}
+        onOk={handleModal}
+        onCancel={handleModal}
+        footer={[<Button onClick={handleModal}>Cancel</Button>]}
+        width={1000}
+      >
+        <AddAdress addAddress={{ addAdd, setAddAdd }} />
+      </Modal>
     </div>
   );
 };

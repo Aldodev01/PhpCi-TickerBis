@@ -8,15 +8,15 @@ const defaultProps = {
 };
 
 const Pdf = forwardRef((props, ref) => {
-  const { dataPdf, setDataPdf } = props.data;
+  const { checkStrictly, setCheckStrictly } = props.data;
   console.log(ref);
 
   if (ref.current == undefined) {
     return (
       <>
         <div className="pdf-overlay" ref={ref}>
-          {dataPdf ? (
-            dataPdf.map((e) => {
+          {checkStrictly.data ? (
+            checkStrictly.data.map((e) => {
               return (
                 <PdfData
                   noResi={e.resi}

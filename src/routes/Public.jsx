@@ -1,6 +1,8 @@
 import React, { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
-
+const SignToken = lazy(() =>
+  import("../pages/Container/Auth/SignToken/SignToken")
+);
 const Signin = lazy(() => import("../pages/Container/Auth/Signin/Signin"));
 const Signup = lazy(() => import("../pages/Container/Auth/Signup/Signup"));
 
@@ -15,6 +17,13 @@ const Public = () => {
     },
     {
       key: 2,
+      exact: true,
+      path: "/1qazxsw23edcvfr45tgbnhy67ujmki89olp",
+      name: "Sign Token",
+      component: <SignToken />,
+    },
+    {
+      key: 3,
       exact: true,
       path: "/",
       name: "Sign In",

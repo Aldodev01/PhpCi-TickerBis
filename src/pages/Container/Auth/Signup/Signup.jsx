@@ -15,12 +15,8 @@ const Signup = () => {
     },
   };
   return (
-    <div className="w100 signIn">
+    <div>
       <CardSignUp />
-      <div className="signIn-lottie">
-        <img src={logoin} width={100} alt="" />
-        <Lottie options={defaultOptions} width={500} height={300} />
-      </div>
     </div>
   );
 };

@@ -1,13 +1,28 @@
 import React, { useCallback, useEffect } from "react";
-import { Form, Input, Button, Select, Checkbox } from "antd";
+import { Form, Input, Button, Select, Checkbox, message } from "antd";
+import { UserEdit } from "../../api/USER";
 
-const UserSetting = ({ action }) => {
+const UserSetting = ({ action, get }) => {
   const { drawerNeed, setDrawerNeed } = action;
-  const onFinish = (values) => {
-    console.log("Success:", values);
-  };
 
-  console.log("drawerNeed", drawerNeed);
+  const onFinish = (values) => {
+    UserEdit({
+      ...values,
+      id: drawerNeed.data.id,
+    })
+      .then((res) => {
+        message.success("Success");
+        setDrawerNeed({
+          ...drawerNeed,
+          drawer: false,
+        });
+        console.log("asikasik", res);
+        get();
+      })
+      .catch((error) => {
+        message.error("Ocurrió un error en el servidor al iniciar sesión");
+      });
+  };
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -33,7 +48,6 @@ const UserSetting = ({ action }) => {
       layout="vertical"
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
-      autoComplete="off"
       form={form}
     >
       <Form.Item
@@ -65,7 +79,7 @@ const UserSetting = ({ action }) => {
       <Form.Item
         initialValue={drawerNeed.data.nohp}
         label="Nomor Handphone"
-        name="nohp"
+        name="nomorTelepon"
         rules={[
           {
             required: true,

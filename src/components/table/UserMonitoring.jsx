@@ -1,12 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { Table, Badge, Button } from "antd";
+import React, {
+  createRef,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { Table, Badge, Button, Modal, Drawer } from "antd";
 import dateFilter from "../../utils/date/myDate";
 import { If, IfElse } from "../../utils/condition/IfElseComponent";
 import currency from "../../utils/currency/Currency";
+import ReactToPrint from "react-to-print";
+import { ImPrinter } from "react-icons/im";
+import {
+  IoPrintOutline,
+  IoPrint,
+  IoPrintSharp,
+  IoHandLeft,
+} from "react-icons/io5";
+import Pdf from "../resource/PDF";
 
 const UserMonitoring = ({ dataTable }) => {
   const { tableData, setTableData } = dataTable;
-  console.log(tableData);
+
+  const componentRef = createRef();
 
   //! COLUMNS TABLE
   const columns = [
@@ -279,22 +295,34 @@ const UserMonitoring = ({ dataTable }) => {
   ];
 
   function TreeData() {
-    const [checkStrictly, setCheckStrictly] = useState(false);
+    const [checkStrictly, setCheckStrictly] = useState({
+      isModal: false,
+      loading: false,
+      data: null,
+      jumlah: 0,
+      check: false,
+    });
 
+    const handlingModal = () => {
+      setCheckStrictly({
+        ...checkStrictly,
+        isModal: !checkStrictly.isModal,
+      });
+    };
     // rowSelection objects indicates the need for row selection
     const rowSelection = {
       onChange: (selectedRowKeys, selectedRows) => {
-        console.log(
-          `selectedRowKeys: ${selectedRowKeys}`,
-          "selectedRows: ",
-          selectedRows
-        );
+        setCheckStrictly({
+          ...checkStrictly,
+          data: selectedRows,
+          jumlah: selectedRowKeys,
+        });
       },
       onSelect: (record, selected, selectedRows) => {
-        console.log(record, selected, selectedRows);
+        console.log(record, selected, "onselected: ", selectedRows);
       },
       onSelectAll: (selected, selectedRows, changeRows) => {
-        console.log(selected, selectedRows, changeRows);
+        console.log(selected, "selectedAll: ", selectedRows, changeRows);
       },
     };
     let newData = tableData?.map((e, i) => ({
@@ -304,6 +332,53 @@ const UserMonitoring = ({ dataTable }) => {
 
     return (
       <>
+        <Drawer
+          title="Pilih Ukuran yang Anda Butuhkan"
+          placement={"bottom"}
+          width={500}
+          onClose={handlingModal}
+          visible={checkStrictly.isModal}
+        >
+          <ReactToPrint
+            trigger={() => (
+              <Button
+                style={{
+                  position: "relative",
+                }}
+                type="primary"
+                icon={<IoPrintSharp />}
+              >
+                Print Thermal 10x10
+              </Button>
+            )}
+            content={() => componentRef.current}
+          />
+          <div style={{ display: "none" }}>
+            <Pdf
+              data={{ checkStrictly, setCheckStrictly }}
+              ref={componentRef}
+            />
+            ;
+          </div>
+          <ReactToPrint
+            trigger={() => (
+              <Button
+                style={{
+                  position: "relative",
+                }}
+                type="primary"
+                icon={<IoPrintSharp />}
+              >
+                Print Thermal 10x15
+              </Button>
+            )}
+            content={() => componentRef.current}
+          />
+        </Drawer>
+        {/* ================== */}
+        <Button type="primary" onClick={handlingModal}>
+          Go to Print
+        </Button>
         <Badge.Ribbon text="Aldodevv Table 3.7.14" color="pink">
           <Table
             columns={columns}

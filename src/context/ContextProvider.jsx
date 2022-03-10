@@ -1,6 +1,7 @@
 import React, { createContext } from "react";
 import MenuContextProvider from "./MenuContextProvider";
 import MenuMobileProvider from "./MenuMobileProvider";
+import OrderContextProvider from "./OrderContextProvider";
 import UserContextProvider from "./UserContextProvider";
 export const ContextWrapper = createContext();
 
@@ -9,7 +10,9 @@ const ContextWrapperProvider = ({ children }) => {
     <ContextWrapper.Provider value={[]}>
       <UserContextProvider>
         <MenuMobileProvider>
-          <MenuContextProvider>{children}</MenuContextProvider>
+          <OrderContextProvider>
+            <MenuContextProvider>{children}</MenuContextProvider>
+          </OrderContextProvider>
         </MenuMobileProvider>
       </UserContextProvider>
     </ContextWrapper.Provider>

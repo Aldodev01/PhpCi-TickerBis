@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.less";
 import App from "./App.jsx";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter, HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import ContextWrapperProvider from "./context/ContextProvider";
 
