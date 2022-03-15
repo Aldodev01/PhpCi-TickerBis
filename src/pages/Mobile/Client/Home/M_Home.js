@@ -33,8 +33,8 @@ const M_Home = () => {
   return (
     <div className="w100">
       <Navbar title={"Home"} cancel={true} />
-      <div className="flex-column-center w100 m-home-header h100">
-        <b>Your Summary</b>
+      <b>Your Summary</b>
+      <div className="flex-column-center m-home-header h100">
         <br />
         <Swiper
           // effect={"coverflow"}
@@ -42,7 +42,6 @@ const M_Home = () => {
             dynamicBullets: true,
           }}
           grabCursor={true}
-          centeredSlides={true}
           slidesPerView={"auto"}
           coverflowEffect={{
             rotate: 50,

@@ -21,6 +21,10 @@ export const MenuMobile = createContext();
 
 const MenuMobileProvider = ({ children }) => {
   const navigate = useNavigate();
+  const [visible, setVisible] = useState({
+    visible: false,
+    value: 0,
+  });
 
   const [menuMobile, setMenuMobile] = useState([
     {
@@ -54,18 +58,27 @@ const MenuMobileProvider = ({ children }) => {
           text: "Pengiriman Baru",
           link: "/mobile/pengiriman/newOrder",
           disabled: false,
+          onClick: async () => {
+            navigate("/mobile/pengiriman/newOrder");
+          },
         },
         {
           id: 98,
           text: "Order History",
           link: "/mobile/pengiriman/history",
           disabled: false,
+          onClick: async () => {
+            navigate("/mobile/pengiriman/history");
+          },
         },
         {
           id: 97,
           text: "Monitoring",
           link: "/mobile/pengiriman/monitoring",
           disabled: false,
+          onClick: async () => {
+            navigate("/mobile/pengiriman/monitoring");
+          },
         },
       ],
     },
@@ -87,12 +100,18 @@ const MenuMobileProvider = ({ children }) => {
           text: "Settlement",
           link: "/mobile/finance/settlement",
           disabled: false,
+          onClick: async () => {
+            navigate("/mobile/finance/settlement");
+          },
         },
         {
           id: 95,
           text: "Invoice",
           link: "/mobile/finance/invoice",
           disabled: false,
+          onClick: async () => {
+            navigate("/mobile/finance/invoice");
+          },
         },
       ],
     },
@@ -158,7 +177,9 @@ const MenuMobileProvider = ({ children }) => {
   ]);
 
   return (
-    <MenuMobile.Provider value={[menuMobile, setMenuMobile]}>
+    <MenuMobile.Provider
+      value={[menuMobile, setMenuMobile, visible, setVisible]}
+    >
       {children}
     </MenuMobile.Provider>
   );

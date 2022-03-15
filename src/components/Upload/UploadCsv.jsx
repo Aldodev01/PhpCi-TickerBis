@@ -35,13 +35,13 @@ const UploadCsv = ({ proModal, data, inputPayload, reset }) => {
       {
         ["Nama Penerima"]: "aldodevv",
         ["Alamat Penerima"]: "Jl. Kebon Duren No.1 Jakarta",
-        ["No Telp Penerima"]: "+6281389166337",
+        ["Nomor Telepon"]: "+6281389166337",
         ["Kode Pos"]: "1234",
         ["Kecamatan"]: "Tegal Parang",
-        ["Berat Kg"]: "1",
-        ["Nilai Cod"]: "200000",
-        ["Isi Paket Nama Produk"]: "Buku",
-        ["Jumlah Paket"]: "4",
+        ["Berat"]: "1",
+        ["Nilai COD (Jika COD)"]: "200000",
+        ["Isi Paket (Nama Produk)"]: "Buku",
+        ["Quantity"]: "4",
         ["Instruksi Pengiriman"]: "Tolong dong paket jangan dilempar",
       },
     ];

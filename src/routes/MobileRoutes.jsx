@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import M_FirstOrder from "../pages/Mobile/Client/Contract/order/first/M_FirstOrder";
 const M_Home = lazy(() => import("../pages/Mobile/Client/Home/M_Home"));
 const M_CekTarif = lazy(() =>
   import("../pages/Mobile/Client/Tools/M_CekTarif")
@@ -15,6 +16,13 @@ const MobileRoutes = () => {
       path: "/",
       name: "Dashboard",
       component: <M_Home />,
+    },
+    {
+      key: 20,
+      exact: true,
+      path: "/mobile/pengiriman/newOrder",
+      name: "New Order",
+      component: <M_FirstOrder />,
     },
     {
       key: 5,

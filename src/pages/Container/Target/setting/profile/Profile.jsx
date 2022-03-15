@@ -17,6 +17,7 @@ import { UserContext } from "../../../../../context/UserContextProvider";
 import "./Profile.less";
 import { VscCheckAll } from "react-icons/vsc";
 import { RiCloseFill } from "react-icons/ri";
+import { AkunEditProfile } from "../../../../../api/AKUN";
 
 const Profile = () => {
   const [user, setUser] = useContext(UserContext);
@@ -28,8 +29,23 @@ const Profile = () => {
   const { Dragger } = Upload;
   const navigate = useNavigate();
 
-  const onFinish = (values) => {
-    console.log("values", values);
+  const onFinish = (e) => {
+    const formData = new FormData();
+    formData.append("nama", e.nama);
+    formData.append("nomorKtp", e.nomorKtp);
+    formData.append("npwp", e.npwp);
+    formData.append("fotoSelfie", e.fotoSelfie);
+
+    console.log("valus", e);
+    console.log("FORMSDATA", formData);
+
+    AkunEditProfile(user.idUser, formData)
+      .then((res) => {
+        console.log("WE DID IT", res);
+      })
+      .catch((err) => {
+        message.error("Ocurrió un error en el servidor al iniciar sesión", 3);
+      });
   };
 
   const onChangeRadio = (e) => {

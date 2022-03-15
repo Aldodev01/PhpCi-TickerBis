@@ -13,12 +13,14 @@ import { MenuMobile } from "../../../context/MenuMobileProvider";
 import { UserContext } from "../../../context/UserContextProvider";
 import MobileRoutes from "../../../routes/MobileRoutes";
 const M_Menubar = () => {
-  const [menuMobile, SetMenuMobile] = useContext(MenuMobile);
+  const [menuMobile, SetMenuMobile, visible, setVisible] =
+    useContext(MenuMobile);
+
   const [user, setUser] = useContext(UserContext);
-  const [visible, setVisible] = useState({
-    visible: false,
-    value: 0,
-  });
+  // const [visible, setVisible] = useState({
+  //   visible: false,
+  //   value: 0,
+  // });
 
   const navigate = useNavigate();
 
@@ -33,8 +35,7 @@ const M_Menubar = () => {
 
   return (
     <>
-      <div className="flex-start w100">
-        <p>asdas</p>
+      <div className="flex-start w100 m-menubar-wrap">
         <MobileRoutes />
         <TabBar
           className="m-menubar"

@@ -132,3 +132,20 @@ export const AkunDeleteAddress = async (id, pickupId) => {
     return error;
   }
 };
+
+export const AkunEditProfile = async (id, data) => {
+  try {
+    const result = await contextApi(`/akun/update?akunId=${id}`, {
+      method: "PUT",
+      headers: {
+        // "access-control-allow-origin" : "*",
+        "Content-Type": "multipart/form-data",
+        Authorization: "Bearer " + token,
+      },
+      data: data,
+    });
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
