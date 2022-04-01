@@ -144,7 +144,10 @@ const Address = () => {
                           })
                           .catch((err) => {
                             getFirstData();
-                            message.error("Настана грешка при избришањето", 3);
+                            message.error(
+                              "Terjadi Kesalahan Pada Server, saat mencari data",
+                              5
+                            );
                           });
                       }}
                     >

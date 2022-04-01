@@ -60,6 +60,7 @@ const SecondOrderCod = () => {
     nettSeller: 0,
     nilaiCod: 0,
     nilaiOngkir: 0,
+    nilaiBarang: 0,
     destinationCode: "",
     originCode: "",
     nomorTelpPenerima: "",
@@ -105,7 +106,7 @@ const SecondOrderCod = () => {
           await setOptionAddress(dataSesaat);
         })
         .catch((err) => {
-          message.error("ʕ´•ᴥ•`ʔ", 5);
+          message.error("Terjadi Kesalahan Pada Server", 5);
         });
   };
 
@@ -133,7 +134,7 @@ const SecondOrderCod = () => {
         FormNettSeler();
       })
       .catch((err) => {
-        message.error("ʕ´•ᴥ•`ʔ", 5);
+        message.error("Terjadi Kesalahan Pada Server", 5);
       });
   };
 
@@ -676,6 +677,16 @@ const SecondOrderCod = () => {
                 addonBefore={prefixSelector3}
                 placeholder="Nett Seller"
                 value={dataPackage[dataPackageControl.selected].nettSeller}
+              />
+            </Form.Item>
+            <Form.Item label="Jenis">
+              <Input
+                disabled
+                value={
+                  dataPackage[dataPackageControl.selected].kodePaket == "REG"
+                    ? "REGULAR"
+                    : "EXPRESS"
+                }
               />
             </Form.Item>
             <Form.Item label="Estimasi" hasFeedback>

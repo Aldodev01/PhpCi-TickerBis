@@ -136,23 +136,30 @@ const CardSignIn = () => {
     const result = await AuthSignIn({
       username: e.email,
       password: e.password,
-    }).then((res) => {
-      if (remember) {
-        localStorage.setItem(encodedPayName, encodedEmail);
-        localStorage.setItem(encodedPayPass, encodedPassword);
-        localStorage.setItem(encodedPayReme, encodedReme);
-      } else {
-        localStorage.clear();
-      }
+    })
+      .then((res) => {
+        if (remember) {
+          localStorage.setItem(encodedPayName, encodedEmail);
+          localStorage.setItem(encodedPayPass, encodedPassword);
+          localStorage.setItem(encodedPayReme, encodedReme);
+        } else {
+          localStorage.clear();
+        }
 
-      if (res.status === 200) {
-        sessionStorage.setItem("authorization", res.data.token);
-        message.success("Đăng nhập thành công");
-        window.location.reload();
-      } else {
-        message.error("Đăng nhập thất bại");
-      }
-    });
+        if (res.status === 200) {
+          sessionStorage.setItem("authorization", res.data.token);
+          message.success("Đăng nhập thành công");
+          window.location.reload();
+        } else {
+          message.error("Data yang Dimasukkan Salah, SIlahkan Coba Lagi", 5);
+        }
+      })
+      .catch((err) => {
+        message.error(
+          "Terjadi Kesalahan Pada Server, Mohon Coba Kembali nanti",
+          5
+        );
+      });
   };
 
   useEffect(() => {

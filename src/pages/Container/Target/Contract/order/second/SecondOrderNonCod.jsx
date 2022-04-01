@@ -17,10 +17,18 @@ import {
 import { useNavigate } from "react-router-dom";
 import "../order.less";
 import UploadCsv from "../../../../../../components/Upload/UploadCsv";
-import { JSONOrderList } from "../../../../../../json";
 import { RiFolderWarningFill } from "react-icons/ri";
 import { GetLocation } from "../../../../../../api/EXPEDITION";
 import { OrderContext } from "../../../../../../context/OrderContextProvider";
+import { GetShippingCost } from "../../../../../../api/SENDING";
+import { UserContext } from "../../../../../../context/UserContextProvider";
+import {
+  partternIndoPhone,
+  patternAlphabet,
+  patternAlphaNumeric,
+  patternEmail,
+  patternNumberOnly,
+} from "../../../../../../utils/regExp/regExp";
 const { Option } = Select;
 const { Step } = Steps;
 
@@ -28,17 +36,15 @@ const SecondOrderNonCod = () => {
   const [modal, setModal] = useState({
     visible: false,
   });
+  const [validate, setValidate] = useState(false);
   const [order, setOrder] = useContext(OrderContext);
   const [dataPackageControl, setDataPackageControl] = useState({
     selected: 0,
   });
+  const [user, setUser] = useContext(UserContext);
   const [optionAddress, setOptionAddress] = useState([]);
-  const [value, setValue] = useState("");
-  const [getShipping, setGetShipping] = useState({
-    layananPaket: "REG",
-    kodePosAsal: "",
-    kodePosTujuan: "",
-    berat: "1",
+  const [prefixOption, setPrefixOption] = useState({
+    phone: "+62",
   });
 
   const [inputer, setInputer] = useState({
@@ -51,18 +57,18 @@ const SecondOrderNonCod = () => {
     kodePosPenerima: "",
     layananPickup: "Reguler",
     namaPenerima: "",
-    nilaiBarang: 0,
+    nettSeller: 0,
     nilaiCod: 0,
     nilaiOngkir: 0,
+    nilaiBarang: 0,
     destinationCode: "",
     originCode: "",
     nomorTelpPenerima: "",
     pesanKhusus: "-",
     valid: false,
     isAsuransi: false,
-    validAddress: "",
     asuransi: 0,
-    codFee: 0,
+    codfee: 0,
     discPriceOngkir: 0,
     estimatedFrom: "0",
     estimatedThru: "0",
@@ -71,43 +77,71 @@ const SecondOrderNonCod = () => {
 
   const navigate = useNavigate();
 
-  const onSearch = (searchText) => {
-    console.log("onSearch", searchText);
-  };
-
-  const onSelect = (data) => {
-    console.log("onSelect", data);
-  };
-
-  const onChange = (data) => {
-    console.log("onChange", data);
-    setValue(data);
-  };
-
   const onSelectAlamat = (data) => {
-    dataPackage[dataPackageControl.selected].alamatPenerima = data;
+    console.log(data);
+    dataPackage[dataPackageControl.selected].kodePosPenerima = data[1];
+    dataPackage[dataPackageControl.selected].destinationCode = data[2];
+    dataPackage[dataPackageControl.selected].kelurahanPenerima = data[0];
+    dataPackage[dataPackageControl.selected].originCode =
+      order.other1.originCode;
+    ShippingCost(data[2]);
   };
 
-  const onChangeAlamat = (data) => {
-    setValue(data);
-  };
   const onSearchAlamat = (searchText) => {
     const dataSesaat = [];
-    console.log("asds", searchText);
     searchText.length > 4 &&
       GetLocation(searchText)
         .then(async (res) => {
-          console.log("ʕ´•ᴥ•`ʔ", res);
+          console.log(res);
           await res.data.content.map((e) => {
             dataSesaat.push({
-              value: `Kel.${e.kelurahan}, Kec.${e.kecamatan}, Kota ${e.kota}, ${e.provinsi} ${e.kodePos}`,
+              value: [
+                `Kel.${e.kelurahan}, Kec.${e.kecamatan}, Kota ${e.kota}, ${e.provinsi} ${e.kodePos}`,
+                e.kodePos,
+                e.kodeTarifJne,
+                e.kelurahan,
+              ],
             });
           });
           await setOptionAddress(dataSesaat);
         })
         .catch((err) => {
-          message.error("ʕ´•ᴥ•`ʔ", 5);
+          message.error(
+            "Terjadi Kesalahan Pada Server, saat mendapatkan data alamat",
+            5
+          );
         });
+  };
+
+  const ShippingCost = async (
+    destination,
+    beratPaket = dataPackage[dataPackageControl.selected].beratPaket
+  ) => {
+    await GetShippingCost(
+      order.other1.expedisiId,
+      beratPaket,
+      destination,
+      order.other1.originCode,
+      "REG"
+    )
+      .then((res) => {
+        dataPackage[dataPackageControl.selected].nilaiOngkir =
+          res.data.discPrice;
+        dataPackage[dataPackageControl.selected].discPriceOngkir =
+          res.data.discPrice;
+        dataPackage[dataPackageControl.selected].estimatedFrom =
+          res.data.etd_from;
+        dataPackage[dataPackageControl.selected].estimatedThru =
+          res.data.etd_thru;
+
+        FormNettSeler();
+      })
+      .catch((err) => {
+        message.error(
+          "Terjadi Kesalahan Pada Server, saat mengambil data ongkir",
+          5
+        );
+      });
   };
 
   const onFinish = (e) => {
@@ -150,22 +184,24 @@ const SecondOrderNonCod = () => {
     form.resetFields();
   };
 
-  useEffect(() => {
-    form.resetFields();
-  }, [dataPackageControl.selected]);
-
   const prefixSelector = (
     <Form.Item name="prefix" noStyle style={{ color: "white" }}>
       <select
+        defaultValue={"+62"}
         style={{
           width: 70,
           color: "white",
           backgroundColor: "inherit",
           border: "none",
         }}
+        onChange={(e) => {
+          setPrefixOption({
+            phone: e.target.value,
+          });
+        }}
       >
         <option value="+62">+62</option>
-        <option value="08">08</option>
+        <option value="0">08</option>
       </select>
     </Form.Item>
   );
@@ -179,17 +215,94 @@ const SecondOrderNonCod = () => {
       <b style={{ color: "white" }}>Rp.</b>
     </Form.Item>
   );
+
   const isNullish = Object.values(
     dataPackage[dataPackageControl.selected]
   ).some((value) => {
+    console.log(value);
     if (value == "") {
-      return true;
+      return false;
     } else if (value == 0) {
+      return false;
+    } else {
       return true;
     }
-
-    return false;
   });
+
+  console.log(isNullish);
+
+  const FormAsuransi = async () => {
+    let isAsuransi = dataPackage[dataPackageControl.selected].isAsuransi;
+    let nilaiCod = dataPackage[dataPackageControl.selected].nilaiCod;
+    let priceResult = 0;
+    if (isAsuransi === true && nilaiCod > 0) {
+      const priceProses = (0.2 / 100) * nilaiCod;
+      priceResult = priceProses + 5000;
+    }
+    await handleInput("asuransi", parseInt(priceResult));
+  };
+
+  const FormCodFee = async () => {
+    let nilaiCod = parseInt(dataPackage[dataPackageControl.selected].nilaiCod);
+    let resultCodFee = (2 / 100) * nilaiCod;
+
+    dataPackage[dataPackageControl.selected].codfee = resultCodFee;
+  };
+
+  const FormNettSeler = () => {
+    let nilaiCod = parseInt(dataPackage[dataPackageControl.selected].nilaiCod);
+    let discPrice = parseInt(
+      dataPackage[dataPackageControl.selected].nilaiOngkir
+    );
+    let codFee = parseInt(dataPackage[dataPackageControl.selected].codfee);
+    let priceNettSeler = nilaiCod - discPrice - codFee;
+
+    handleInput("nettSeller", parseInt(priceNettSeler));
+  };
+
+  useEffect(() => {
+    form.resetFields();
+  }, [dataPackageControl.selected]);
+
+  useEffect(() => {
+    if (order.pickupId == "") {
+      message.info("Mohon Maaf Silahkan Mengulangi Step 1", 5);
+      setTimeout(() => {
+        navigate("/dashboard/pengiriman/newOrder");
+      }, 5000);
+    }
+  }, [order]);
+
+  useEffect(() => {
+    async function Fetchdata() {
+      const data = await dataPackage.map((e) => {
+        console.log(e);
+        const isNullish = Object.values(e).every((value, _index, arr) => {
+          if (arr[17] === true) {
+            let checking = arr.forEach((a) => {
+              if (a == "") {
+                return false;
+              } else if (a == 0) {
+                return false;
+              } else {
+                return true;
+              }
+            });
+            console.log("aselole", checking);
+          }
+          // if (value == "") {
+          //   return false;
+          // } else if (value == 0) {
+          //   return false;
+          // } else {
+          //   return true;
+          // }
+        });
+        e.valid = isNullish;
+      });
+    }
+    Fetchdata();
+  }, [dataPackage]);
 
   return (
     <div className="secondOrder-wrapper">
@@ -209,11 +322,11 @@ const SecondOrderNonCod = () => {
             }}
           />
           <Step
-            title="Waiting NONCOD"
+            title="Waiting COD"
             subTitle="Package Order"
             description="Isi Package Anda Terlebih Dahulu"
             onStepClick={() => {
-              navigate("/dashboard/pengiriman/secondOrder/NONCOD");
+              navigate("/dashboard/pengiriman/secondOrder/COD");
             }}
           />
           <Step
@@ -242,9 +355,18 @@ const SecondOrderNonCod = () => {
               kelurahanPenerima:
                 dataPackage[dataPackageControl.selected].kelurahanPenerima,
               beratPaket: dataPackage[dataPackageControl.selected].beratPaket,
-              isiPaket: dataPackage[dataPackageControl.selected].isiPaket,
+              kodepaket: "REG",
+              deskripsiPaket:
+                dataPackage[dataPackageControl.selected].deskripsiPaket,
+              jumlahPaket: dataPackage[dataPackageControl.selected].jumlahPaket,
               pesanKhusus: dataPackage[dataPackageControl.selected].pesanKhusus,
               nilaiCod: dataPackage[dataPackageControl.selected].nilaiCod,
+              estimatedFrom:
+                dataPackage[dataPackageControl.selected].estimatedFrom,
+              estimatedThru:
+                dataPackage[dataPackageControl.selected].estimatedThru,
+              nilaiOngkir: dataPackage[dataPackageControl.selected].nilaiOngkir,
+              isAsuransi: dataPackage[dataPackageControl.selected].isAsuransi,
             }}
             onFinish={onFinish}
           >
@@ -258,9 +380,19 @@ const SecondOrderNonCod = () => {
                   message: "Masukan Nama Penerima",
                 },
                 {
-                  min: 6,
+                  min: 4,
                   message: "Masukan Nama Penerima minimal 4 karakter",
                 },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (patternAlphaNumeric.test(value)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("Say No to Special Character")
+                    );
+                  },
+                }),
               ]}
               hasFeedback
             >
@@ -274,27 +406,48 @@ const SecondOrderNonCod = () => {
             <Form.Item
               name="nomorTelpPenerima"
               label="Nomor Telepon"
+              tooltip={{
+                title:
+                  "Nomor Telp harus diisi dengan angka dan minimal 8 digit",
+                icon: <InfoCircleOutlined />,
+              }}
               rules={[
                 {
                   required: true,
                   message: "Masukan Nomor Telepon Penerima",
                 },
+                {
+                  min: 8,
+                  message: "Masukan Nomor Telepon Penerima minimal 8 digit",
+                },
+                {
+                  max: 16,
+                  message: "Masukan Nomor Telepon Penerima maksimal 16 digit",
+                },
               ]}
               hasFeedback
             >
               <Input
+                type={"number"}
+                min={0}
+                size="large"
+                className="w100"
                 addonBefore={prefixSelector}
                 placeholder="Isi Nomor Telepon Penerima"
                 onChange={(e) => {
-                  handleInput("nomorTelpPenerima", e.target.value);
+                  handleInput(
+                    "nomorTelpPenerima",
+                    `${prefixOption.phone}${e.target.value}`
+                  );
                 }}
               />
             </Form.Item>
             <Form.Item
               name="alamatPenerima"
-              label="Alamat dan Panrokan Rumah"
+              label="Alamat dan Patokan Rumah"
               tooltip={{
-                title: "Tooltip with customize icon",
+                title:
+                  "Alamat Penerima Harus Sesuai Dengan Alamat Rumah, dengan Maksimal 250 Karakter",
                 icon: <InfoCircleOutlined />,
               }}
               rules={[
@@ -316,6 +469,10 @@ const SecondOrderNonCod = () => {
             <Form.Item
               name="KelurahanPenerima"
               label="Kecamatan / Kota / Kode Pos"
+              tooltip={{
+                title: `Kecamatan Akan Muncul Otomatis, Jika value lebih dari 3 huruf`,
+                icon: <InfoCircleOutlined />,
+              }}
               rules={[
                 {
                   required: true,
@@ -335,35 +492,67 @@ const SecondOrderNonCod = () => {
                 onSearch={onSearchAlamat}
                 placeholder="input here"
               />
-              {/* //         <Input placeholder="Isi Kecamatan/ Kota/ Kodepos Penerima" /> */}
             </Form.Item>
             <h1 style={{ fontSize: 20 }}>Data Paket</h1>
             <Form.Item
               name="beratPaket"
               label="Berat Paket"
+              tooltip={{
+                title: `Berat Paket Harus Fix Angka dalam Hitungan (Kg)`,
+                icon: <InfoCircleOutlined />,
+              }}
               rules={[
                 {
                   required: true,
-                  message: "Tipe Pengiriman Anda",
+                  message: "Berat Paket Anda (Kg)",
                 },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (patternNumberOnly.test(value)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error(
+                        `Berat Paket Harus Fix Numeric jika ${value} maka isi ${Math.ceil(
+                          value
+                        )}`
+                      )
+                    );
+                  },
+                }),
               ]}
               hasFeedback
             >
               <Input
+                type={"number"}
+                min={1}
                 addonAfter={prefixSelector2}
                 placeholder="Isi Berat Paket (Kg)"
                 onChange={(e) => {
                   handleInput("beratPaket", e.target.value);
+                  e.target.value &&
+                    ShippingCost(
+                      dataPackage[dataPackageControl.selected].destinationCode,
+                      e.target.value
+                    );
                 }}
               />
             </Form.Item>
             <Form.Item
-              name="isiPaket"
+              name="deskripsiPaket"
               label="Isi Paket"
+              tooltip={{
+                title: `Isi Paket Berupa Barang yang Anda ingin kirim`,
+                icon: <InfoCircleOutlined />,
+              }}
               rules={[
                 {
                   required: true,
-                  message: "Tipe Pengiriman Anda",
+                  message: "Silahkan Masukan Isi Paket Anda",
+                },
+                {
+                  min: 4,
+                  message: "Masukan Isi Paket minimal 4 karakter",
                 },
               ]}
               hasFeedback
@@ -371,7 +560,46 @@ const SecondOrderNonCod = () => {
               <Input
                 placeholder="Isi Paket"
                 onChange={(e) => {
-                  handleInput("isiPaket", e.target.value);
+                  handleInput("deskripsiPaket", e.target.value);
+                }}
+              />
+            </Form.Item>
+            <Form.Item
+              name="jumlahPaket"
+              label="Jumlah Paket"
+              tooltip={{
+                title: `Jumlah Paket yang dikirimkan minimal 1`,
+                icon: <InfoCircleOutlined />,
+              }}
+              rules={[
+                {
+                  required: true,
+                  message: "Silahkan Masukan Jumlah Paket Anda",
+                },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (patternNumberOnly.test(value)) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error(
+                        `Jumlah Paket Harus Fix Numeric jika ${value} maka isi ${Math.ceil(
+                          value
+                        )}`
+                      )
+                    );
+                  },
+                }),
+              ]}
+              hasFeedback
+            >
+              <Input
+                type={"number"}
+                min={1}
+                addonAfter={prefixSelector2}
+                placeholder="Isi Jumlah Paket"
+                onChange={(e) => {
+                  handleInput("jumlahPaket", e.target.value);
                 }}
               />
             </Form.Item>
@@ -379,138 +607,87 @@ const SecondOrderNonCod = () => {
               name="pesanKhusus"
               label="Instruksi Pengiriman"
               tooltip={{
-                title: "Tooltip with customize icon",
+                title: `Pesan Khusus untuk Kurir Jika tidak ada isi "-" saja `,
                 icon: <InfoCircleOutlined />,
               }}
               rules={[
                 {
                   required: true,
-                  message: "Please input your Tipe Pickup!",
+                  message: "Silahkan Isi Pesan Khusus Anda",
+                },
+                {
+                  max: 200,
+                  message:
+                    "Pesan yang disampaikan sudah mencapai batas maksimal",
                 },
               ]}
             >
-              <Input.TextArea showCount maxLength={200} rows={4} />
+              <Input.TextArea showCount maxLength={205} rows={4} />
             </Form.Item>
             <h1 style={{ fontSize: 20 }}>Data Pengiriman</h1>
-            <Form.Item
-              name="nilaiCod"
-              label="Nilai Cod"
-              rules={[
-                {
-                  required: true,
-                  message: "Nilai Cod Tidak Tersedia",
-                },
-              ]}
-              hasFeedback
-            >
+            <Form.Item label="Ongkir Paket" hasFeedback>
               <Input
                 addonBefore={prefixSelector3}
-                placeholder="Nilai Cod"
-                onChange={(e) => {
-                  handleInput("nilaiCod", e.target.value);
-                }}
+                placeholder="Ongkir"
+                value={dataPackage[dataPackageControl.selected].nilaiOngkir}
               />
             </Form.Item>
-            <Form.Item
-              initialValue={
-                dataPackage[dataPackageControl.selected].nilaiOngkir
-              }
-              name="nilaiOngkir"
-              label="Ongkir Spesial Imezi"
-              rules={[
-                {
-                  required: true,
-                  message: "Ongkir Tidak Tersedia",
-                },
-              ]}
-              hasFeedback
-            >
+
+            <Form.Item label="Jenis">
               <Input
                 disabled
-                addonBefore={prefixSelector3}
-                placeholder="Ongkir Spesial Imezi"
+                value={
+                  dataPackage[dataPackageControl.selected].kodePaket == "REG"
+                    ? "REGULAR"
+                    : "EXPRESS"
+                }
               />
             </Form.Item>
-            <Form.Item
-              initialValue={dataPackage[dataPackageControl.selected].codFee}
-              name="codFee"
-              label="Cod Fee - 2.5%"
-              rules={[
-                {
-                  required: true,
-                  message: "Cod Fee Tidak Tersedia",
-                },
-              ]}
-              hasFeedback
-            >
+            <Form.Item label="Estimasi" hasFeedback>
               <Input
-                disabled
-                addonBefore={prefixSelector3}
-                placeholder="Ongkir Spesial Imezi"
-              />
-            </Form.Item>
-            <Form.Item
-              initialValue={dataPackage[dataPackageControl.selected].netSeller}
-              name="netSeller"
-              label="Nett Seller"
-              rules={[
-                {
-                  required: true,
-                  message: "Nett Seller Tidak Tersedia",
-                },
-              ]}
-              hasFeedback
-            >
-              <Input
-                disabled
-                addonBefore={prefixSelector3}
-                placeholder="Ongkir Spesial Imezi"
-              />
-            </Form.Item>
-            <Form.Item
-              initialValue={
-                dataPackage[dataPackageControl.selected].estimatedFrom +
-                " - " +
-                dataPackage[dataPackageControl.selected].estimatedTo +
-                " Hari"
-              }
-              name="estimated"
-              label="Estimasi"
-              rules={[
-                {
-                  required: true,
-                  message: "Estimasi Tidak Tersedia",
-                },
-              ]}
-              hasFeedback
-            >
-              <Input
-                disabled
-                addonBefore={prefixSelector3}
-                placeholder="Ongkir Spesial Imezi"
+                placeholder="Estimasi Waktu Pengiriman"
+                value={
+                  dataPackage[dataPackageControl.selected].estimatedFrom +
+                  " - " +
+                  dataPackage[dataPackageControl.selected].estimatedThru +
+                  " Hari"
+                }
               />
             </Form.Item>
             <Form.Item name="isAsuransi" label="Asuransi" hasFeedback>
               <Checkbox
-              // onChange={() => {
-              //   setRemember(!remember);
-              // }}
+                checked={dataPackage[dataPackageControl.selected].isAsuransi}
+                onChange={(e) => {
+                  handleInput("isAsuransi", e.target.checked);
+                  if (e.target.checked) {
+                    FormAsuransi();
+                  }
+                }}
               >
                 Really you want to use Asurance ?
               </Checkbox>
             </Form.Item>
-            <br />
-            <br />
 
-            <Button
-              type="primary"
-              className="w100"
-              onClick={() => {
-                navigate("/dashboard/pengiriman/secondOrder");
-              }}
-            >
-              Submit
-            </Button>
+            {dataPackage[dataPackageControl.selected].isAsuransi === true ? (
+              <>
+                <Form.Item label="Asuransi" hasFeedback>
+                  <Input
+                    disabled
+                    addonBefore={prefixSelector3}
+                    placeholder="Asuransi yang Tersedia"
+                    value={dataPackage[dataPackageControl.selected].asuransi}
+                  />
+                </Form.Item>
+                <Form.Item label="DIsclaimer">
+                  <p style={{ color: "red" }}>
+                    Jika nilai barang tidak diisi, maka tidak masuk asuransi
+                    barang yang tidak di asuransi penggantian max 10x ongkir
+                  </p>
+                </Form.Item>
+              </>
+            ) : null}
+            <br />
+            <br />
           </Form>
         </div>
       </div>
@@ -620,6 +797,7 @@ const SecondOrderNonCod = () => {
           size="large"
           type="danger"
           onClick={onFinish}
+          disabled={false}
           // onClick={() => {
           //   navigate("/dashboard/pengiriman/thirdOrder");
           // }}

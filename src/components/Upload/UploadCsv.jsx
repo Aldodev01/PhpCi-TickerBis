@@ -142,90 +142,68 @@ const UploadCsv = ({ proModal, data, inputPayload, reset }) => {
     let newData = await rows?.map((row) => {
       arrData.push({
         namaPenerima: row?.nama_penerima,
-        beratPaket: parseInt(row?.berat),
+        beratPaket: row?.berat,
         pesanKhusus: row?.instruksi_pengiriman,
         deskripsiPaket: row["isi_paket_(nama_produk)"],
         kelurahanPenerima: row?.kecamatan + ", " + row?.kode_pos,
         kodePosPenerima: row?.kode_pos,
         alamatPenerima: row?.alamat_penerima,
-        nilaiCod: row["nilai_cod_(jika_cod)"],
+        nilaiCod: Math.ceil(row["nilai_cod_(jika_cod)"]),
         nomorTelpPenerima: row?.nomor_telepon,
-        jumlahPaket: parseInt(row?.quantity),
+        jumlahPaket: row?.quantity,
+        nilaiBarang: 0,
       });
     });
 
     const dataProcess = await arrData.forEach((data) => {
-      const isNullish = Object.values(data).some((value) => {
-        if (!value) {
-          return true;
-        }
-        return false;
-      });
+      // const isNullish = Object.values(data).some((value) => {
+      //   if (!value) {
+      //     return true;
+      //   }
+      //   return false;
+      // });
 
       const nilaiCod = parseInt(data.nilaiCod);
       let priceCodFee = (2 / 100) * nilaiCod;
-
-      if (isNullish) {
-        message.info(
-          "Pastikan Anda Memasukan Data Sesuai dengan contoh pada template :)",
-          5
-        );
-      } else {
-        GetPriceLocation(
-          data.beratPaket,
-          order.other1.kecamatanAsal,
-          data.kelurahanPenerima?.split(",")[0],
-          order.other1.kodePosAsal,
-          data.kelurahanPenerima?.split(",")[1].trim()
-        )
-          .then(async (res) => {
-            if ((await res.status) == 200) {
-              const discPrice = await parseInt(res?.data?.discPrice);
-              const nettSeller = nilaiCod - discPrice - priceCodFee;
-              // ----------------------------------------------------
-              data.kelurahanPenerima = res?.data?.destination_name;
-              data.nilaiOngkir = res?.data?.discPrice;
-              data.destinationCode = res?.data?.destinationCode;
-              data.estimatedFrom = res?.data?.etd_from;
-              data.estimatedThru = res?.data?.etd_thru;
-              data.codfee = priceCodFee;
-              data.nettSeller = nettSeller;
-              data.isAsuransi = false;
-              data.kodePaket = "REG";
-              data.layananPickup = "Reguler";
-              data.kodePosPenerima = data.kodePosPenerima;
-              data.nilaiBarang = 0;
-              data.originCode = order.other1.originCode;
-              data.valid = true;
-              await setModal({
-                ...modal,
-                visible: false,
-              });
-              reset();
-              await setDataPackage(arrData);
-            } else {
-              // ----------------------------------------------
-              data.kelurahanPenerima = "-";
-              data.nilaiOngkir = 0;
-              data.destinationCode = "-";
-              data.estimatedFrom = "0";
-              data.estimatedThru = "0";
-              data.codfee = 0;
-              data.nettSeller = 0;
-              data.isAsuransi = false;
-              data.kodePaket = "REG";
-              data.layananPickup = "Reguler";
-              data.kodePosPenerima = data.kodePosPenerima;
-              data.nilaiBarang = 0;
-              data.originCode = order.other1.originCode;
-              data.valid = false;
-
-              reset();
-              await setDataPackage(arrData);
-              message.error("Gagal Mengambil Data Ongkir", 5);
-            }
-          })
-          .catch((err) => {
+      // if (isNullish) {
+      //   message.info(
+      //     "Pastikan Anda Memasukan Data Sesuai dengan contoh pada template :)",
+      //     5
+      //   );
+      // } else {
+      GetPriceLocation(
+        data.beratPaket,
+        order.other1.kecamatanAsal,
+        data.kelurahanPenerima?.split(",")[0],
+        order.other1.kodePosAsal,
+        data.kelurahanPenerima?.split(",")[1].trim()
+      )
+        .then(async (res) => {
+          if ((await res.status) == 200) {
+            const discPrice = await parseInt(res?.data?.discPrice);
+            const nettSeller = nilaiCod - discPrice - priceCodFee;
+            // ----------------------------------------------------
+            data.kelurahanPenerima = res?.data?.destination_name;
+            data.nilaiOngkir = res?.data?.discPrice;
+            data.destinationCode = res?.data?.destinationCode;
+            data.estimatedFrom = res?.data?.etd_from;
+            data.estimatedThru = res?.data?.etd_thru;
+            data.codfee = priceCodFee;
+            data.nettSeller = nettSeller;
+            data.isAsuransi = false;
+            data.kodePaket = "REG";
+            data.layananPickup = "Reguler";
+            data.kodePosPenerima = data.kodePosPenerima;
+            data.nilaiBarang = 0;
+            data.originCode = order.other1.originCode;
+            data.valid = true;
+            await setModal({
+              ...modal,
+              visible: false,
+            });
+            reset();
+            await setDataPackage(arrData);
+          } else {
             // ----------------------------------------------
             data.kelurahanPenerima = "-";
             data.nilaiOngkir = 0;
@@ -243,10 +221,32 @@ const UploadCsv = ({ proModal, data, inputPayload, reset }) => {
             data.valid = false;
 
             reset();
-            setDataPackage(arrData);
-            message.error("Terjadi Kesalahan Pada Server", 5);
-          });
-      }
+            await setDataPackage(arrData);
+            message.error("Gagal Mengambil Data Ongkir", 5);
+          }
+        })
+        .catch((err) => {
+          // ----------------------------------------------
+          data.kelurahanPenerima = "-";
+          data.nilaiOngkir = 0;
+          data.destinationCode = "-";
+          data.estimatedFrom = "0";
+          data.estimatedThru = "0";
+          data.codfee = 0;
+          data.nettSeller = 0;
+          data.isAsuransi = false;
+          data.kodePaket = "REG";
+          data.layananPickup = "Reguler";
+          data.kodePosPenerima = data.kodePosPenerima;
+          data.nilaiBarang = 0;
+          data.originCode = order.other1.originCode;
+          data.valid = false;
+
+          reset();
+          setDataPackage(arrData);
+          message.error("Terjadi Kesalahan Pada Server", 5);
+        });
+      // }
     });
 
     // if (arrData?.length > 1) {

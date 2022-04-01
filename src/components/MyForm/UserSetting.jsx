@@ -16,11 +16,13 @@ const UserSetting = ({ action, get }) => {
           ...drawerNeed,
           drawer: false,
         });
-        console.log("asikasik", res);
         get();
       })
       .catch((error) => {
-        message.error("Ocurrió un error en el servidor al iniciar sesión");
+        message.error(
+          "Terjadi Kesalahan Pada Server, Mohon Coba Kembali nanti",
+          5
+        );
       });
   };
 

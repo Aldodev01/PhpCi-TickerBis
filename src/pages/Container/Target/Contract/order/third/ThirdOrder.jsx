@@ -1,4 +1,4 @@
-import { Button, Collapse, message, Space } from "antd";
+import { Button, Collapse, message, Modal, Space } from "antd";
 import React, { useContext, useState, useEffect } from "react";
 import "../order.less";
 import { OrderContext } from "../../../../../../context/OrderContextProvider";
@@ -10,6 +10,10 @@ import numberToWord from "../../../../../../utils/currency/NumberToWords";
 import MyLottie from "../../../../../../components/Lottie/MyLottie";
 import notFound from "../../../../../../assets/lottie/notfound.json";
 import { UserContext } from "../../../../../../context/UserContextProvider";
+import { CreateTransactionCod } from "../../../../../../api/SENDING";
+import sending from "../../../../../../assets/lottie/sending.json";
+import error from "../../../../../../assets/lottie/error.json";
+
 const ThridOrder = () => {
   const { Panel } = Collapse;
   const [order, setOrder] = useContext(OrderContext);
@@ -18,6 +22,7 @@ const ThridOrder = () => {
   const [condition, setCondiition] = useState({
     loading: false,
     disabled: false,
+    suksesModal: false,
   });
 
   const [dataPackage, setDataPackage] = useState(null);
@@ -41,29 +46,114 @@ const ThridOrder = () => {
       loading: true,
     });
 
-    if (user.user.kodeToko) {
-      console.log();
+    if (user.user.kodeToko === null) {
+      message.error("Anda belum memiliki Toko", 5);
+      setCondiition({
+        ...condition,
+        loading: false,
+      });
+      setTimeout(() => {
+        navigate("/dashboard/setting/:profile");
+      }, 3000);
+    } else {
+      const payloadCod = {
+        kendaraanPaket: order.kendaraanPaket,
+        pickupId: order.pickupId,
+        pengembalianId: order.pengembalianId,
+        tanggalPickup: order.tanggalPickup?.split("-").reverse().join("-"),
+        waktuPickup: dateFilter.getTime(new Date()),
+        tipePengiriman: order.tipePengiriman,
+        details: dataPackage.map((e) => {
+          // Mendapatkan Asuransi
+          let hargaAsuransi = (0.2 / 100) * e?.nilaiCod;
+          let priceHargaAsuransi;
+          if (e?.isAsuransi === true) {
+            priceHargaAsuransi = hargaAsuransi + 5000;
+          } else {
+            priceHargaAsuransi = 0;
+          }
 
-      if (user.user.kodeToko === null) {
-        message.error("Anda belum memiliki Toko", 5);
-        setCondiition({
-          ...condition,
-          loading: false,
-        });
-        setTimeout(() => {
-          navigate("/dashboard/setting/:profile");
-        }, 3000);
-      } else {
-        const payload = {
-          kendaraanPaket: order.kendaraanPaket,
-          pickupId: order.pickupId,
-          pengembalianId: order.pengembalianId,
-          tanggalPickup: order.tanggalPickup?.split("-").reverse().join("-"),
-          waktuPickup: dateFilter.getTime(new Date()),
-          tipePengiriman: order.tipePengiriman,
-          // details: dataPackage.map((e) => {})
-        };
+          // !------------------------
+          return {
+            ...e,
+            beratPaket: parseInt(e.beratPaket),
+            jumlahPaket: parseInt(e.jumlahPaket),
+            nilaiCod: parseInt(e.nilaiCod),
+            asuransi: priceHargaAsuransi,
+          };
+        }),
+      };
+
+      // const payloadNonCod = {
+
+      // }
+
+      if (order.tipePengiriman === "COD") {
+        CreateTransactionCod(order.other1.expedisiId, payloadCod)
+          .then((res) => {
+            if (res.data) {
+              console.log(res);
+              setCondiition({
+                ...condition,
+                suksesModal: true,
+              });
+              message.success("Pengiriman Berhasil Dibuat", 5);
+              return <SuksesPengiriman sukses={true} />;
+            } else {
+              setCondiition({
+                ...condition,
+                suksesModal: true,
+              });
+              return <SuksesPengiriman />;
+            }
+          })
+          .catch((err) => {
+            message.error(
+              err?.data?.message ||
+                "Terjadi Kesalahan Pada Saat Membuat Pengiriman, Silahkan Coba Lagi Nanti",
+              5
+            );
+          });
       }
+    }
+  };
+
+  const handleSuksesModal = () => {
+    setCondiition({
+      ...condition,
+      suksesModal: !condition.suksesModal,
+    });
+  };
+
+  const SuksesPengiriman = (sukses = false) => {
+    if (sukses) {
+      return (
+        <Modal
+          title="Pengiriman Berhasil"
+          visible={condition.suksesModal}
+          onOk={handleSuksesModal}
+          onCancel={handleData}
+        >
+          <div className="w100 flex-column-center">
+            <MyLottie lottie={sending} />
+            <h1>Pengiriman Berhasil Dibuat 🎉🎉 </h1>
+          </div>
+        </Modal>
+      );
+    } else {
+      return (
+        <Modal
+          title="Terjadi Masalah Saat Membuat Pengiriman 🙁"
+          visible={condition.suksesModal}
+          onOk={handleSuksesModal}
+          onCancel={handleData}
+        >
+          <div className="w100 flex-column-center">
+            <MyLottie lottie={error} />
+            <h1>Check Kembali Data mu dan coba lagi nanti 🙂</h1>
+          </div>
+        </Modal>
+      );
     }
   };
 
@@ -72,7 +162,10 @@ const ThridOrder = () => {
       if (order.detail.length > 0) {
         setDataPackage(order.detail);
       } else {
-        message.info("Pengiriman tidak valid jika data yang dikirim 0", 3);
+        message.info(
+          "Mohon Maaf, Ulangi Inputan Anda dan jangan di refresh",
+          5
+        );
         setTimeout(() => {
           navigate(`/dashboard/pengiriman/newOrder`);
         }, 3000);

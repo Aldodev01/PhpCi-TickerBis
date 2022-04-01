@@ -1,8 +1,9 @@
-import { Button, Drawer } from "antd";
-import React, { createRef, useState } from "react";
+import { Button, Drawer, message } from "antd";
+import React, { createRef, useState, useEffect } from "react";
 import { IoPrintSharp } from "react-icons/io5";
 import { useParams } from "react-router-dom";
 import ReactToPrint from "react-to-print";
+import { GetHookResi } from "../../api/HOOK";
 import Pdf from "../resource/PDF";
 
 const SharedLabel = () => {
@@ -13,6 +14,8 @@ const SharedLabel = () => {
     isModal: false,
     loading: false,
     data: null,
+    jumlah: 0,
+    check: false,
   });
   const handlingModal = () => {
     setCheckStrictly({
@@ -21,6 +24,20 @@ const SharedLabel = () => {
     });
   };
   const componentRef = createRef();
+
+  useEffect(() => {
+    GetHookResi(idUser, awb)
+      .then((res) => {
+        console.log("jancok", res);
+      })
+      .catch((err) => {
+        console.log(err);
+        message.error(
+          "Terjadi kesalahan Pada Server, Silahkan Coba lagi nanti",
+          3
+        );
+      });
+  }, []);
 
   return (
     <div className="w100 h100 flex-column-center" style={{ minHeight: 600 }}>

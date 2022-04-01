@@ -44,7 +44,10 @@ const Profile = () => {
         console.log("WE DID IT", res);
       })
       .catch((err) => {
-        message.error("Ocurrió un error en el servidor al iniciar sesión", 3);
+        message.error(
+          "Terjadi Kesalahan Pada Server, saat mengubah profile",
+          5
+        );
       });
   };
 
@@ -61,13 +64,14 @@ const Profile = () => {
         });
       })
       .catch((err) => {
-        message.error("Ocurrió un error en el servidor al iniciar sesión");
+        message.error(
+          "Terjadi Kesalahan Pada Server, saat mendapatkan data akun",
+          5
+        );
         localStorage.clear();
         navigate("/");
       });
   }, []);
-
-  console.log("dataAccount", dataAccount, dataDetailUser);
 
   const onChangePhoto = (e) => {
     const reader = new FileReader();

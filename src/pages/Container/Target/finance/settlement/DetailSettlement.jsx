@@ -2,8 +2,10 @@ import { message, Space, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { GetDetailSettlement } from "../../../../../api/SETTLEMENT";
+import MyLottie from "../../../../../components/Lottie/MyLottie";
 import currency from "../../../../../utils/currency/Currency";
 import numberToWord from "../../../../../utils/currency/NumberToWords";
+import loading from "../../../../../assets/lottie/loading.json";
 import "./Settlement.less";
 
 const DetailSettlement = () => {
@@ -21,7 +23,7 @@ const DetailSettlement = () => {
         setDataGlobal(res.data);
       })
       .catch((err) => {
-        message.error("決済詳細データ収集中にエラーが発生しました", 5);
+        message.error("Terjadi Kesalahan Pada Server, Coba Kembali nanti ", 5);
       });
   }, [resultParams]);
 
@@ -348,7 +350,16 @@ const DetailSettlement = () => {
           </div>
         </>
       ) : (
-        <p>asik</p>
+        <div className="flex-center w100">
+          <div
+            style={{
+              width: "100%",
+              maxWidth: 500,
+            }}
+          >
+            <MyLottie lottie={loading} />
+          </div>
+        </div>
       )}
     </div>
   );

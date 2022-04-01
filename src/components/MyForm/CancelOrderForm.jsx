@@ -61,15 +61,24 @@ const CancelOrderForm = ({ state }) => {
           );
         })
         .catch((err) => {
-          message.error("Oasdsa");
+          message.error(
+            "Terjadi Kesalahan Pada Server, Silahkan coba kembali nanti",
+            5
+          );
         });
     } else {
       DeleteOrderHistory(user.idUser, text, cancel.data.resi)
         .then((res) => {
-          console.log("=====><<<<=====", res);
+          message.success(
+            "Paket Berhasil Dibatalkan, Mohon maaf atas ketidak nyamanan anda",
+            3
+          );
         })
         .catch((err) => {
-          message.error("<(　-_･)-ᡕᠵ᠊ᡃ່࡚ࠢ࠘ ⸝່ࠡࠣ᠊߯᠆ࠣ╦╤──");
+          message.error(
+            "Terjadi Kesalahan Pada Server, Silahkan coba kembali nanti",
+            5
+          );
         });
     }
   }

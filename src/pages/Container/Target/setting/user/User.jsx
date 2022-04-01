@@ -48,7 +48,10 @@ const User = () => {
         setDataTable(res.data.content);
       })
       .catch((error) => {
-        message.error("Ocurrió un error en el servidor al iniciar sesión");
+        message.error(
+          "Terjadi Kesalahan Pada Server, saat mendapatkan data user",
+          5
+        );
       });
   };
 

@@ -1,5 +1,5 @@
 import { Drawer, message, Tooltip } from "antd";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, createRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   GetDetailOrderHistory,
@@ -19,11 +19,27 @@ import {
 } from "antd";
 import { IoLogoWhatsapp } from "react-icons/io5";
 import CancelOrderForm from "../../../../../components/MyForm/CancelOrderForm";
+import ReactToPrint from "react-to-print";
+import Pdf from "../../../../../components/resource/PDF";
+import {
+  IoPrintOutline,
+  IoPrint,
+  IoPrintSharp,
+  IoHandLeft,
+} from "react-icons/io5";
 const DetailHistory = () => {
+  const componentRef = createRef();
   const { id } = useParams();
   const idBatch = id.replace(":", "");
   const [dataTable, setDataTable] = useState(null);
   const [user, setUser] = useContext(UserContext);
+  const [checkStrictly, setCheckStrictly] = useState({
+    isModal: false,
+    loading: false,
+    data: null,
+    jumlah: 0,
+    check: false,
+  });
 
   const [payload, setPayload] = useState({
     page: 0,
@@ -68,7 +84,7 @@ const DetailHistory = () => {
           className="flex-center "
           onClick={() => {
             if (text === "Share Label Url") {
-              window.location.href = link;
+              window.open(link, "_blank");
             } else {
               navigate(link);
             }
@@ -90,12 +106,20 @@ const DetailHistory = () => {
     </Row>
   );
 
+  const handlingModal = () => {
+    setCheckStrictly({
+      ...checkStrictly,
+      isModal: !checkStrictly.isModal,
+    });
+  };
+
   const handleDrawer = () => {
     setCancel({
       ...cancel,
       modal: !cancel.modal,
     });
   };
+
   useEffect(() => {
     if (user.idUser !== null) {
       if (tanggal.dateStart && tanggal.dateEnd) {
@@ -113,7 +137,10 @@ const DetailHistory = () => {
             setDataTable(res.data.content);
           })
           .catch((err) => {
-            message.error("事故がありました", 3);
+            message.error(
+              "Terjadi Kesalahan Pada Server, saat mendapatkan data",
+              5
+            );
           });
       } else {
         GetDetailOrderHistory(
@@ -128,7 +155,10 @@ const DetailHistory = () => {
             setDataTable(res.data.content);
           })
           .catch((err) => {
-            message.error("事故がありました", 3);
+            message.error(
+              "Terjadi Kesalahan Pada Server, saat mendapatkan data",
+              5
+            );
           });
       }
     } else {
@@ -139,6 +169,15 @@ const DetailHistory = () => {
   return (
     <div>
       <h1 style={{ fontSize: "2rem" }}>Detail Order History</h1>
+
+      <br />
+      <br />
+
+      <Button type="primary" onClick={handlingModal}>
+        Print Sekaligus
+      </Button>
+      <br />
+      <br />
 
       <div className="flex-column-center">
         {dataTable ? (
@@ -210,7 +249,7 @@ const DetailHistory = () => {
                   />
                   <IconLink
                     icon={<RiShareForwardBoxLine style={iconStyle} />}
-                    link={`/shared-label/${user.idUser}/${e?.orderId}`}
+                    link={`/shared-label/${user.idUser}/${e?.resi}`}
                     text="Share Label Url"
                   />
                 </Space>
@@ -235,6 +274,46 @@ const DetailHistory = () => {
           <CancelOrderForm state={{ cancel, setCancel }} />
         </Drawer>
       </div>
+
+      <Drawer
+        title="Pilih Ukuran yang Anda Butuhkan"
+        placement={"bottom"}
+        width={500}
+        onClose={handlingModal}
+        visible={checkStrictly.isModal}
+      >
+        <ReactToPrint
+          trigger={() => (
+            <Button
+              style={{
+                position: "relative",
+              }}
+              type="primary"
+              icon={<IoPrintSharp />}
+            >
+              Print Thermal 10x10
+            </Button>
+          )}
+          content={() => componentRef.current}
+        />
+        <div style={{ display: "none" }}>
+          <Pdf data={{ checkStrictly, setCheckStrictly }} ref={componentRef} />;
+        </div>
+        <ReactToPrint
+          trigger={() => (
+            <Button
+              style={{
+                position: "relative",
+              }}
+              type="primary"
+              icon={<IoPrintSharp />}
+            >
+              Print Thermal 10x15
+            </Button>
+          )}
+          content={() => componentRef.current}
+        />
+      </Drawer>
     </div>
   );
 };

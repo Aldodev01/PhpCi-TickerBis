@@ -1,14 +1,32 @@
-import { DatePicker, Input, message, Pagination, Space, Table } from "antd";
+import {
+  DatePicker,
+  Input,
+  message,
+  Pagination,
+  Space,
+  Table,
+  Button,
+  Tooltip,
+  Drawer,
+} from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { ExpeditionGet } from "../../../../../api/EXPEDITION";
+import { useNavigate } from "react-router-dom";
 import {
   GetSettlement,
   GetSettlementByDate,
+  GetSettlementBySelect,
 } from "../../../../../api/SETTLEMENT";
 import { UserContext } from "../../../../../context/UserContextProvider";
 import { getLast, getFirst } from "../../../../../utils/date/SummaryDate";
 import currency from "../../../../../utils/currency/Currency";
+import MyLottie from "../../../../../components/Lottie/MyLottie";
+import loading from "../../../../../assets/lottie/loading.json";
+import { FaFileExport } from "react-icons/fa";
+import ExportXlsx from "../../../../../utils/Export/xlsx";
+import ExportCsv from "../../../../../utils/Export/csv";
+import dateFilter from "../../../../../utils/date/myDate";
 
 const Settlement = () => {
   const { Search } = Input;
@@ -19,6 +37,9 @@ const Settlement = () => {
     dateEnd: null,
     dateStart: null,
   });
+  const [condition, setCondition] = useState({
+    modalExport: false,
+  });
   const [expedition, setExpedition] = useState(null);
   const [user, setUser] = useContext(UserContext);
   const [dataTable, setDataTable] = useState([]);
@@ -27,6 +48,35 @@ const Settlement = () => {
     totalItems: 0,
   });
 
+  const navigate = useNavigate();
+  const { RangePicker } = DatePicker;
+
+  const handleDrawerExport = () => {
+    setCondition({
+      ...condition,
+      modalExport: !condition.modalExport,
+    });
+  };
+
+  const styleButtonExport = {
+    maxWidth: "100px",
+  };
+
+  const months = {
+    ["01"]: "Jan",
+    ["02"]: "Feb",
+    ["03"]: "Mar",
+    ["04"]: "Apr",
+    ["05"]: "May",
+    ["06"]: "Jun",
+    ["07"]: "Jul",
+    ["08"]: "Aug",
+    ["09"]: "Sep",
+    ["10"]: "Oct",
+    ["11"]: "Nov",
+    ["12"]: "Dec",
+  };
+
   useEffect(() => {
     ExpeditionGet()
       .then((res) => {
@@ -34,7 +84,10 @@ const Settlement = () => {
         console.log("gettting expedition", res.data.content);
       })
       .catch((err) => {
-        message.error("遠征データの取得中にエラーが発生しました", 5);
+        message.error(
+          "Terjadi Kesalahan Pada Server, saat mendapatkan data expedition",
+          5
+        );
       });
   }, []);
 
@@ -60,7 +113,10 @@ const Settlement = () => {
             });
           })
           .catch((err) => {
-            message.error("決済データ収集中にエラーが発生しました", 5);
+            message.error(
+              "Terjadi Kesalahan Pada Server, Coba Kembali nanti ",
+              5
+            );
           });
       } else {
         GetSettlement(
@@ -80,7 +136,10 @@ const Settlement = () => {
             });
           })
           .catch((err) => {
-            message.error("決済データ収集中にエラーが発生しました", 5);
+            message.error(
+              "Terjadi Kesalahan Pada Server, Coba Kembali nanti ",
+              5
+            );
           });
       }
     }
@@ -164,21 +223,192 @@ const Settlement = () => {
         }
       },
     },
+    {
+      title: "STATUS",
+      dataIndex: "isPaid",
+      key: "isPaid",
+      render: (text, record, index) => {
+        if (text === false) {
+          return (
+            <p style={{ color: "red" }}>
+              <b>PENDING</b>
+            </p>
+          );
+        } else {
+          return (
+            <>
+              <p style={{ color: "green" }}>
+                <b>
+                  PAID
+                  <br />
+                  {record.tglPaid}
+                </b>
+              </p>
+            </>
+          );
+        }
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "action",
+      key: "action",
+      render: (text, record, index) => {
+        return (
+          <Space>
+            <Button
+              type="primary"
+              onClick={() => {
+                navigate(`/dashboard/finance/detail-settlement/:${record.id}`);
+              }}
+            >
+              Detail
+            </Button>
+            <Tooltip title="Export Data to File">
+              <Button type="danger" onClick={handleDrawerExport}>
+                <FaFileExport />
+              </Button>
+            </Tooltip>
+          </Space>
+        );
+      },
+    },
   ];
 
-  function onChange(page, pageSize) {
+  function onChangePage(page, pageSize) {
     setPayload({
       ...payload,
       size: pageSize,
-      page: page <= 0 ? page : page - 1,
+      page: payload.page >= 0 ? page - 1 : page,
     });
   }
+
   const onSearch = (value) => {
     setPayload({
       ...payload,
       keyword: value,
     });
   };
+
+  function TreeData() {
+    const [checkStrictly, setCheckStrictly] = useState({
+      data: [],
+      jumlah: 0,
+      modal: false,
+    });
+
+    const [dataSelect, setDataSelect] = useState(null);
+    let newData = dataTable?.map((e, i) => ({
+      ...e,
+      key: i,
+    }));
+
+    const rowSelection = {
+      onChange: (selectedRowKeys, selectedRows) => {
+        setCheckStrictly({
+          data: selectedRows,
+          jumlah: selectedRowKeys.length,
+        });
+      },
+    };
+    let dataSource = [];
+    let dataSending =
+      checkStrictly.data &&
+      checkStrictly.data.map((e) => {
+        dataSource.push(e.idRef);
+      });
+    let arrData = [];
+
+    const GetDataForExport = async () => {
+      setCondition({
+        ...condition,
+        modalExport: !condition.modalExport,
+      });
+
+      await GetSettlementBySelect(user.idUser, dataSource)
+        .then((res) => {
+          setDataSelect(res.data);
+        })
+        .catch((err) => {
+          console.error(err);
+          message.error(
+            "Terjadi Kesalahan Pada Server, saat mendapatkan data settlement",
+            5
+          );
+        });
+    };
+
+    return (
+      <>
+        {checkStrictly.data.length !== 0 ? (
+          <Button
+            onClick={GetDataForExport}
+            shape="round"
+            size="large"
+            type="primary"
+          >
+            <Space>Export All</Space>
+          </Button>
+        ) : null}
+        <br />
+        <br />
+
+        <Table
+          columns={columns}
+          rowSelection={{ ...rowSelection, checkStrictly }}
+          dataSource={newData}
+          bordered
+          pagination={false}
+          pageSize={payload.size}
+          defaultPageSize={payload.size}
+          current={payload.page + 1}
+        />
+        <br />
+        <br />
+        <div className="flex-between w100">
+          <p></p>
+          <Pagination
+            showSizeChanger
+            showQuickJumper
+            onChange={onChangePage}
+            showTotal={(total) => `Total ${total} items`}
+            pageSize={payload.size}
+            defaultPageSize={payload.size}
+            current={payload.page + 1}
+            total={total.totalPage}
+          />
+        </div>
+        <Drawer
+          title="Pilih Format Export untuk File Anda"
+          placement="bottom"
+          width={500}
+          onClose={handleDrawerExport}
+          visible={condition.modalExport}
+        >
+          <Space direction="vertical" className="w100">
+            <Button
+              type="primary"
+              className="w100"
+              onClick={() => {
+                ExportXlsx(arrData, "Settlement");
+              }}
+            >
+              CSV
+            </Button>
+            <Button
+              type="danger"
+              className="w100"
+              onClick={() => {
+                ExportCsv(arrData, "Settlement");
+              }}
+            >
+              XLSX
+            </Button>
+          </Space>
+        </Drawer>
+      </>
+    );
+  }
 
   return (
     <div>
@@ -189,34 +419,19 @@ const Settlement = () => {
       <br />
       <div className="flex-between w100">
         <Space>
-          <DatePicker
-            placeholder="Tanggal Awal"
+          <RangePicker
+            style={{
+              borderRadius: 40,
+              width: "100%",
+              maxWidth: 600,
+            }}
             format="DD-MM-YYYY"
-            size="large"
-            onChange={(date, dateString) => {
+            onChange={(dates, dateStrings) => {
               setPayload({
                 ...payload,
-                dateStart: dateString,
+                dateStart: dateStrings[0],
+                dateEnd: dateStrings[1],
               });
-            }}
-            style={{
-              width: "100%",
-              maxWidth: 300,
-            }}
-          />
-          <DatePicker
-            placeholder="Tanggal Akhir"
-            format="DD-MM-YYYY"
-            size="large"
-            onChange={(date, dateString) => {
-              setPayload({
-                ...payload,
-                dateEnd: dateString,
-              });
-            }}
-            style={{
-              width: "100%",
-              maxWidth: 300,
             }}
           />
         </Space>
@@ -231,27 +446,22 @@ const Settlement = () => {
       <br />
       <br />
 
-      <Table
-        columns={columns}
-        dataSource={dataTable}
-        bordered
-        pagination={false}
-      />
-      <br />
-      <br />
-      <div className="flex-between w100">
-        <p></p>
-        <Pagination
-          showSizeChanger
-          showQuickJumper
-          onChange={onChange}
-          showTotal={(total) => `Total ${total} items`}
-          pageSize={payload.size}
-          defaultPageSize={payload.size}
-          current={payload.page + 1}
-          total={total.totalPage}
-        />
-      </div>
+      {dataTable !== null ? (
+        <>
+          <TreeData />
+        </>
+      ) : (
+        <div className="flex-center w100">
+          <div
+            style={{
+              width: "100%",
+              maxWidth: 500,
+            }}
+          >
+            <MyLottie lottie={loading} />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

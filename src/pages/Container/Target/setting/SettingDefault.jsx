@@ -45,14 +45,17 @@ const SettingDefault = () => {
           setProcess(res.data.result);
         })
         .catch((err) => {
-          message.error("Ocurrió un error en el servidor al iniciar sesión", 3);
+          message.error("Terjadi Kesalahan Pada Server", 5);
         });
       UserGet(user.idUser, 0, 99)
         .then((res) => {
           setDataUser(res.data.content);
         })
         .catch((error) => {
-          message.error("Ocurrió un error en el servidor al iniciar sesión", 3);
+          message.error(
+            "Terjadi Kesalahan Pada Server, saat mendapatkan data  user",
+            5
+          );
         });
     }
   }, [user]);

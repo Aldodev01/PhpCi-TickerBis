@@ -77,7 +77,10 @@ const EditAdress = ({ editAddress }) => {
           }
         })
         .catch((err) => {
-          message.error("ʕ´•ᴥ•`ʔ", 5);
+          message.error(
+            "Terjadi Kesalahan Pada Server, saat membuat alamat",
+            5
+          );
         });
     } else {
       message.error("Silahkan Lengkapi Alamat Anda Terlebih Dahulu");
@@ -105,9 +108,15 @@ const EditAdress = ({ editAddress }) => {
             await setOptionAddress(res.data.content);
           })
           .catch((err) => {
-            message.error("ʕ´•ᴥ•`ʔ", 5);
+            message.error(
+              "Terjadi Kesalahan Pada Server, saat mencari data lokasi",
+              5
+            );
           })
-      : message.info("ʕ´•ᴥ•`ʔ", 5);
+      : message.info(
+          "Butuh 3 Character atau lebih untuk mendapatkan lokasi",
+          5
+        );
   };
   const onSelectAlamat = (data, i) => {
     console.log("data", data, i.needed);

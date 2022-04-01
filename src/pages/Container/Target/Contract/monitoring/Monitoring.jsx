@@ -236,7 +236,7 @@ const Monitoring = () => {
       )}
       {table_isError && (
         <>
-          {(message.error("私たちのシステムに事故がありました"), 5)}
+          {message.error("Terjadi Kesalahan Pada Server", 5)}
           <iframe
             src="https://my.spline.design/skatergirlcopy-f5b2a25ae4603f5eee574d829a9427e8/"
             frameborder="0"

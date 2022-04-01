@@ -25,6 +25,8 @@ const OrderHistory = () => {
   const navigate = useNavigate();
   const [user, setUser] = useContext(UserContext);
   const [dataTable, setDataTable] = useState(null);
+  const { RangePicker } = DatePicker;
+
   const [payload, setPayload] = useState({
     page: 0,
     size: 30,
@@ -36,21 +38,32 @@ const OrderHistory = () => {
     dateEnd: getLast,
   });
 
-  console.log("user", user);
-  const onSearch = (value) => console.log(value);
+  const onSearch = (value) => {
+    GetOrderHistory(user.idUser, payload.page, payload.size, value)
+      .then((res) => {
+        console.log(res.data);
+        setDataTable(res.data.content);
+        setPagginationState(res.data.totalItems);
+      })
+      .catch((err) => {
+        message.error("Terjadi Kesalahan Pada Server, saat mencari data", 5);
+      });
+  };
+
   useEffect(() => {
-    if (user.idUser) {
-      GetOrderHistory(user.idUser, payload.page, payload.size, payload.keyword)
-        .then((res) => {
-          console.log(res.data);
-          setDataTable(res.data.content);
-          setPagginationState(res.data.totalItems);
-        })
-        .catch((err) => {
-          message.error("事故がありました", 3);
-        });
-    }
-  }, [user]);
+    GetOrderHistory(user.idUser, payload.page, payload.size, payload.keyword)
+      .then((res) => {
+        console.log(res.data);
+        setDataTable(res.data.content);
+        setPagginationState(res.data.totalItems);
+      })
+      .catch((err) => {
+        message.error(
+          "Terjadi Kesalahan Pada Server, saat penarikan data order",
+          5
+        );
+      });
+  }, [payload]);
 
   useEffect(() => {
     if (payload || datePayload) {
@@ -68,7 +81,10 @@ const OrderHistory = () => {
           setPagginationState(res.data.totalItems);
         })
         .catch((err) => {
-          message.error("事故がありました", 3);
+          message.error(
+            "Terjadi Kesalahan Pada Server, saat mendapatkan data",
+            5
+          );
         });
     }
   }, [payload, datePayload]);
@@ -87,27 +103,21 @@ const OrderHistory = () => {
       <br />
       <div className="flex-between w100">
         <Space>
-          <DatePicker
-            placeholder={"Input your Date"}
-            format="DD-MM-YYYY"
-            onChange={(date, dateString) => {
+          <RangePicker
+            style={{
+              borderRadius: 40,
+              width: "100%",
+              maxWidth: 600,
+            }}
+            placeholder={["Filter", "By Date"]}
+            onChange={(date, dateStrings) => {
               setDatePayload({
                 ...datePayload,
-                dateStart: dateString,
+                dateStart: dateStrings[0],
+                dateEnd: dateStrings[1],
               });
             }}
             size="large"
-          />
-          <DatePicker
-            size="large"
-            placeholder={"Input your Date"}
-            format="DD-MM-YYYY"
-            onChange={(date, dateString) => {
-              setDatePayload({
-                ...datePayload,
-                dateEnd: dateString,
-              });
-            }}
           />
         </Space>
         <Search

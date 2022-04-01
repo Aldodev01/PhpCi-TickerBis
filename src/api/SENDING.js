@@ -59,37 +59,37 @@ export const GetAddressFrom = async (id) => {
   }
 };
 
-export const CreateTransaction = async (id, data, type) => {
-  if (type === "COD") {
-    try {
-      const result = await contextApi(`/pengiriman/${id}/input/transaksi`, {
+export const CreateTransactionCod = async (id, data) => {
+  try {
+    const result = await contextApi(`/pengiriman/${id}/input/transaksi`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      data: data,
+    });
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const CreateTransactionNonCod = async (id, data) => {
+  try {
+    const result = await contextApi(
+      `/pengiriman/${id}/input/transaksi/noncod`,
+      {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + token,
         },
         data: data,
-      });
-      return result;
-    } catch (error) {
-      return error;
-    }
-  } else {
-    try {
-      const result = await contextApi(
-        `/pengiriman/${id}/input/transaksi/noncod`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token,
-          },
-          data: data,
-        }
-      );
-      return result;
-    } catch (error) {
-      return error;
-    }
+      }
+    );
+    return result;
+  } catch (error) {
+    return error;
   }
 };

@@ -51,7 +51,7 @@ const AddRekening = ({ AddRekening, getData }) => {
         setLoading(false);
       })
       .catch((error) => {
-        message.error("Ocurrió un error en el servidor al iniciar sesión", 3);
+        
         setLoading(false);
       });
 

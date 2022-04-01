@@ -33,7 +33,10 @@ const TrackingHistory = () => {
           setDataDetail(res.data);
         })
         .catch((err) => {
-          message.error("事故がありました", 3);
+          message.error(
+            "Terjadi Kesalahan Pada Server, saat mendapatkan data transaksi",
+            5
+          );
         });
     } else {
       message.info("Refresh atau Login Ulang", 3);
@@ -46,7 +49,10 @@ const TrackingHistory = () => {
           setDataTrack(res.data);
         })
         .catch((err) => {
-          message.error("事故がありました", 3);
+          message.error(
+            "Terjadi Kesalahan Pada Server, saat mendapatkan data tracking",
+            5
+          );
         });
     } else {
       message.info("Refresh atau Login Ulang", 3);

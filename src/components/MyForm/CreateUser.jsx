@@ -25,7 +25,10 @@ const UserCreate = ({ action, get }) => {
         get();
       })
       .catch((err) => {
-        message.error("Ocurrió un error en el servidor al iniciar sesión");
+        message.error(
+          "Terjadi Kesalahan Pada Server, Mohon Coba Kembali nanti",
+          5
+        );
       });
   };
 

@@ -59,3 +59,19 @@ export const GetSettlementByDate = async (
     return error;
   }
 };
+
+export const GetSettlementBySelect = async (id, data) => {
+  try {
+    const result = await contextApi(`/akun/${id}/finance/detail/ref`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      data: data,
+    });
+    return result;
+  } catch (error) {
+    return error;
+  }
+};
