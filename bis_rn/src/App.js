@@ -1,16 +1,34 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {Home, Print, Splash, Welcome} from './screens';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import IcHome from './assets/icons/home.svg';
+import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
 import IcPrinter from './assets/icons/printer.svg';
+import Home from './screens/Home/Home';
+import Print from './screens/Print/Print';
+import Splash from './screens/Splash/Splash';
+import Welcome from './screens/Welcome/Welcome';
+import Login from './screens/Login/Login';
+import Tentang from './screens/Tentang/Tentang';
+import Bantuan from './screens/Bantuan/Bantuan';
+import Register from './screens/Register/Register';
+import Lokasi from './screens/Lokasi/Lokasi';
+import Pesan from './screens/Pesan/Pesan';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const App = () => {
+  const theme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      primary: '#00A3FF',
+      accent: '#FF00A8',
+    },
+  };
   function MyTabBar({state, descriptors, navigation}) {
     const BotIcon = ({title, actived}) => {
       if (title === 'Home') {
@@ -106,26 +124,57 @@ const App = () => {
   };
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Splash">
-        <Stack.Screen
-          name="Splash"
-          component={Splash}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Welcome"
-          component={Welcome}
-          options={{headerShown: false}}
-        />
-
-        <Stack.Screen
-          name="MainApp"
-          component={MainApp}
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <PaperProvider theme={theme}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="MainApp">
+          <Stack.Screen
+            name="Splash"
+            component={Splash}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Welcome"
+            component={Welcome}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Register"
+            component={Register}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Login"
+            component={Login}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MainApp"
+            component={MainApp}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Tentang"
+            component={Tentang}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Bantuan"
+            component={Bantuan}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Lokasi"
+            component={Lokasi}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Pesan"
+            component={Pesan}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </PaperProvider>
   );
 };
 

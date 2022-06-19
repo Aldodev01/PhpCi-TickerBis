@@ -1,14 +1,14 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 
-const Print = () => {
+const Register = () => {
   return (
     <View>
-      <Text>Print</Text>
+      <Text>Register</Text>
     </View>
   );
 };
 
-export default Print;
+export default Register;
 
 const styles = StyleSheet.create({});
