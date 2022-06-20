@@ -3,7 +3,7 @@
 $hostname = "localhost";
 $database = "pemesanan_tiket_bus";
 $username = "root";
-$password = "";
+$password = "root";
 
 $connect = mysqli_connect($hostname,$username,$password,$database);
 

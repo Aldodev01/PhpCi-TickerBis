@@ -1,15 +1,23 @@
 import React from 'react';
-import {ImageBackground, StyleSheet, Text, View, Button} from 'react-native';
+import {
+  ImageBackground,
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  Image,
+} from 'react-native';
 import BackgroundImg from '../../assets/image/background.jpg';
-import {Gap} from '../../components';
+import IcLogo from '../../assets/icons/logo.png';
+import Gap from '../../components/gap/Gap';
 
 const Welcome = ({navigation}) => {
   return (
     <ImageBackground source={BackgroundImg} style={styles.getStartedWrap}>
       <View>
-        {/* <ILLogo /> */}
+        <Image source={IcLogo} style={{width: 70, height: 70}} />
         <Text style={styles.getStartedTitle}>
-          Konsultasi dengan dokter jadi lebih engas & mengsedih
+          Mudik mudah dengan Ticker Buss
         </Text>
       </View>
 
@@ -17,7 +25,7 @@ const Welcome = ({navigation}) => {
         <Button
           title="Get Started"
           type="primary"
-          onPress={() => navigation.replace('MainApp')}
+          onPress={() => navigation.replace('Login')}
         />
         <Gap Gap={16} />
       </View>
@@ -37,7 +45,7 @@ const styles = StyleSheet.create({
   getStartedTitle: {
     fontSize: 28,
     color: 'white',
-    marginTop: 91,
+    marginTop: 41,
     fontFamily: 'Roboto',
   },
 });

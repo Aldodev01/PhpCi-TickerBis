@@ -1,16 +1,16 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacityBase, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import IcBack from '../../assets/icons/chevron-left.svg';
-import Gap from '../gap';
 
-const Header = () => {
+const Header = ({withBack, onPress, headerTitle}) => {
   return (
     <View style={styles.header}>
-      {/* <TouchableOpacityBase onPress={onPress}> */}
-      <IcBack />
-      {/* </TouchableOpacityBase> */}
-      <Text style={styles.headerText}>asds</Text>
-      <Gap Gop={24} />
+      {withBack && (
+        <TouchableOpacity accessibilityRole="button" onPress={onPress}>
+          <IcBack />
+        </TouchableOpacity>
+      )}
+      <Text style={styles.headerText}>{headerTitle}</Text>
     </View>
   );
 };
@@ -25,6 +25,9 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 100,
   },
 
   headerText: {

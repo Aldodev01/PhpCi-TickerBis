@@ -1,0 +1,74 @@
+{
+  "tiket": [
+    {
+      "id": 1,
+      "lokasi": "Jakarta",
+      "asal": "Pandeglang",
+      "tanggal": "02-10-2022",
+      "jam": "08:00 WIB",
+      "harga": 210000,
+      "keterangan": "Tiket untuk keberangkatan tujuan Jakarta",
+      "stok": 56
+    },
+    {
+      "id": 2,
+      "lokasi": "Pandeglang",
+      "asal": "Jakarta",
+      "tanggal": "03-10-2022",
+      "jam": "08:00 WIB",
+      "harga": 220000,
+      "keterangan": "Tiket untuk keberangkatan tujuan Pandeglang",
+      "stok": 12
+    },
+    {
+      "id": 3,
+      "lokasi": "Depok",
+      "asal": "Surabaya",
+      "tanggal": "04-10-2022",
+      "jam": "08:00 WIB",
+      "harga": 320000,
+      "keterangan": "Tiket untuk keberangkatan tujuan Depok",
+      "stok": 5
+    },
+    {
+      "id": 4,
+      "lokasi": "Surabaya",
+      "asal": "Depok",
+      "tanggal": "05-10-2022",
+      "jam": "08:00 WIB",
+      "harga": 330000,
+      "keterangan": "Tiket untuk keberangkatan tujuan Surabaya",
+      "stok": 34
+    },
+    {
+      "id": 5,
+      "lokasi": "Bandung",
+      "asal": "Jogjakarta",
+      "tanggal": "05-10-2022",
+      "jam": "08:00 WIB",
+      "harga": 190000,
+      "keterangan": "Tiket untuk keberangkatan tujuan Bandung",
+      "stok": 178
+    },
+    {
+      "id": 6,
+      "lokasi": "Jogjakarta",
+      "asal": "Bandung",
+      "tanggal": "05-10-2022",
+      "jam": "08:00 WIB",
+      "harga": 200000,
+      "keterangan": "Tiket untuk keberangkatan dari Jogjakarta",
+      "stok": 0
+    },
+    {
+      "id": 10,
+      "lokasi": "Jakarta",
+      "asal": "Pandeglang",
+      "tanggal": "03-10-2022",
+      "jam": "09:00 WIB",
+      "harga": 420000,
+      "keterangan": "Tiket untuk keberangkatan tujuan Jakarta",
+      "stok": 1
+    }
+  ]
+}

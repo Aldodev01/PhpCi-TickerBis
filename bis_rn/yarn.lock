@@ -756,6 +756,14 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@callstack/react-theme-provider@^3.0.7":
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/@callstack/react-theme-provider/-/react-theme-provider-3.0.7.tgz#b7ce1a53d63ad5e83574b831ae0af6b7c6cc40e7"
+  integrity sha512-Ab6rbD2w4u9W3yf7LQQ8evx9m8fZNsoWxt+MFm3AyZnyKQNCJf4K7ip9tHHZgSs+HTdoj38lEqPehvFOVQKvAg==
+  dependencies:
+    deepmerge "^3.2.0"
+    hoist-non-react-statics "^3.3.0"
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.npmjs.org/@cnakazawa/watch/-/watch-1.0.4.tgz"
@@ -1481,6 +1489,11 @@
   version "1.0.0"
   resolved "https://registry.npmjs.org/@types/eslint-visitor-keys/-/eslint-visitor-keys-1.0.0.tgz"
   integrity sha512-OCutwjDZ4aFS6PB1UZ988C4YgwlBHJd6wCeQqaLdmadZ/7e+w79+hbMUFC1QXDNCmdyoRfAFdm0RypzwR+Qpag==
+
+"@types/geojson@^7946.0.7":
+  version "7946.0.8"
+  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.8.tgz#30744afdb385e2945e22f3b033f897f76b1f12ca"
+  integrity sha512-1rkryxURpr6aWP7R786/UQOkJ3PcpQiWkAXBmdWc7ryFWqN6a4xfK7BtjXvFBKO9LjQ+MWQSWxYeZX1OApnArA==
 
 "@types/graceful-fs@^4.1.2":
   version "4.1.5"
@@ -2307,6 +2320,15 @@ cliui@^6.0.0:
     strip-ansi "^6.0.0"
     wrap-ansi "^6.2.0"
 
+cliui@^7.0.2:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/cliui/-/cliui-7.0.4.tgz#a0265ee655476fc807aea9df3df8df7783808b4f"
+  integrity sha512-OcRE68cOsVMXp1Yvonl/fzkQOyjLSu/8bhPDfQt0e0/Eb283TKP20Fs2MqoPsr9SwA595rRCA+QMzYc9nBP+JQ==
+  dependencies:
+    string-width "^4.2.0"
+    strip-ansi "^6.0.0"
+    wrap-ansi "^7.0.0"
+
 clone-deep@^4.0.1:
   version "4.0.1"
   resolved "https://registry.npmjs.org/clone-deep/-/clone-deep-4.0.1.tgz"
@@ -2371,7 +2393,7 @@ color-string@^1.6.0:
     color-name "^1.0.0"
     simple-swizzle "^0.2.2"
 
-color@^3.1.3:
+color@^3.1.2, color@^3.1.3:
   version "3.2.1"
   resolved "https://registry.npmjs.org/color/-/color-3.2.1.tgz"
   integrity sha512-aBl7dZI9ENN6fUGC7mWpMTPNHmWUSNan9tuWN6ahh5ZLNk9baLJOnSMlrQkHcrfFgz2/RigjUVAjdx36VcemKA==
@@ -3415,7 +3437,7 @@ gensync@^1.0.0-beta.2:
   resolved "https://registry.npmjs.org/gensync/-/gensync-1.0.0-beta.2.tgz"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
-get-caller-file@^2.0.1:
+get-caller-file@^2.0.1, get-caller-file@^2.0.5:
   version "2.0.5"
   resolved "https://registry.npmjs.org/get-caller-file/-/get-caller-file-2.0.5.tgz"
   integrity sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==
@@ -3602,6 +3624,13 @@ hermes-profile-transformer@^0.0.6:
   integrity sha512-cnN7bQUm65UWOy6cbGcCcZ3rpwW8Q/j4OP5aWRhEry4Z2t2aR1cjrbp0BS+KiBN0smvP1caBgAuxutvyvJILzQ==
   dependencies:
     source-map "^0.7.3"
+
+hoist-non-react-statics@^3.3.0:
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
+  integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
+  dependencies:
+    react-is "^16.7.0"
 
 hosted-git-info@^2.1.4:
   version "2.8.9"
@@ -5769,7 +5798,7 @@ prompts@^2.0.1, prompts@^2.4.0:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@*, prop-types@^15.8.1:
+prop-types@*, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -5824,7 +5853,7 @@ react-freeze@^1.0.0:
   resolved "https://registry.npmjs.org/react-freeze/-/react-freeze-1.0.0.tgz"
   integrity sha512-yQaiOqDmoKqks56LN9MTgY06O0qQHgV4FUrikH357DydArSZHQhl0BJFqGKIZoTqi8JizF9Dxhuk1FIZD6qCaw==
 
-"react-is@^16.12.0 || ^17.0.0", react-is@^16.13.0, react-is@^16.13.1:
+"react-is@^16.12.0 || ^17.0.0", react-is@^16.13.0, react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -5853,6 +5882,28 @@ react-native-html-to-pdf@^0.12.0:
   version "0.12.0"
   resolved "https://registry.npmjs.org/react-native-html-to-pdf/-/react-native-html-to-pdf-0.12.0.tgz"
   integrity sha512-Yb5WO9SfF86s5Yv9PqXQ7fZDr9zZOJ+6jtweT9zFLraPNHWX7pSxe2dSkeg3cGiNrib65ZXGN6ksHymfYLFSSg==
+
+react-native-iphone-x-helper@^1.3.1:
+  version "1.3.1"
+  resolved "https://registry.yarnpkg.com/react-native-iphone-x-helper/-/react-native-iphone-x-helper-1.3.1.tgz#20c603e9a0e765fd6f97396638bdeb0e5a60b010"
+  integrity sha512-HOf0jzRnq2/aFUcdCJ9w9JGzN3gdEg0zFE4FyYlp4jtidqU03D5X7ZegGKfT1EWteR0gPBGp9ye5T5FvSWi9Yg==
+
+react-native-maps@0.31.1:
+  version "0.31.1"
+  resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.31.1.tgz#574be035a52287e3ab1c1da35e2ce3e2116f0fd6"
+  integrity sha512-vipeOPykqLRMCLcLUCZEB+cTdNSlq88NLb0jChY4UGTY5fgOS7GYWkfswy6bW1ayTRLxJS3zpMGFDUY59/ZrXA==
+  dependencies:
+    "@types/geojson" "^7946.0.7"
+    deprecated-react-native-prop-types "^2.3.0"
+
+react-native-paper@^4.12.1:
+  version "4.12.1"
+  resolved "https://registry.yarnpkg.com/react-native-paper/-/react-native-paper-4.12.1.tgz#9c0c6236f40ab0bf02dd2d42e0264125d2f9d48a"
+  integrity sha512-xvAkwtRatsDcB/eSBUwoThBAT5Yy32SgKwrfHRUXi/9s5lR2SEuPZwmsZyAaq+bsxtAH1CaIT4CDeVLSaArzyg==
+  dependencies:
+    "@callstack/react-theme-provider" "^3.0.7"
+    color "^3.1.2"
+    react-native-iphone-x-helper "^1.3.1"
 
 react-native-print@^0.10.0:
   version "0.10.0"
@@ -5895,6 +5946,14 @@ react-native-svg@^12.3.0:
   dependencies:
     css-select "^4.2.1"
     css-tree "^1.0.0-alpha.39"
+
+react-native-vector-icons@^9.1.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-9.1.0.tgz#52eaa205f5954d567b7048eb93d58ac854a2c59e"
+  integrity sha512-2AHZ/h9d/+rC0odz+OwbGNlc1Lik/pHhSixn4HfC8RtQ8CxfSBZ6gg7bTLcZhdSvZN+ZEGi30Fj+ZnOSQy+smg==
+  dependencies:
+    prop-types "^15.7.2"
+    yargs "^16.1.1"
 
 react-native@0.68.2:
   version "0.68.2"
@@ -7238,6 +7297,15 @@ wrap-ansi@^6.2.0:
     string-width "^4.1.0"
     strip-ansi "^6.0.0"
 
+wrap-ansi@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/wrap-ansi/-/wrap-ansi-7.0.0.tgz#67e145cff510a6a6984bdf1152911d69d2eb9e43"
+  integrity sha512-YVGIj2kamLSTxw6NsZjoBxfSwsn0ycdesmc4p+Q21c5zPuZ1pl+NfxVdxPtdHvmNVOQ6XSYG4AUtyt/Fi7D16Q==
+  dependencies:
+    ansi-styles "^4.0.0"
+    string-width "^4.1.0"
+    strip-ansi "^6.0.0"
+
 wrappy@1:
   version "1.0.2"
   resolved "https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz"
@@ -7314,6 +7382,11 @@ y18n@^4.0.0:
   resolved "https://registry.npmjs.org/y18n/-/y18n-4.0.3.tgz"
   integrity sha512-JKhqTOwSrqNA1NY5lSztJ1GrBiUodLMmIZuLiDaMRJ+itFd+ABVE8XBjOvIWL+rSqNDC74LCSFmlb/U4UZ4hJQ==
 
+y18n@^5.0.5:
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/y18n/-/y18n-5.0.8.tgz#7f4934d0f7ca8c56f95314939ddcd2dd91ce1d55"
+  integrity sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==
+
 yallist@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/yallist/-/yallist-4.0.0.tgz"
@@ -7332,6 +7405,11 @@ yargs-parser@^18.1.2:
     camelcase "^5.0.0"
     decamelize "^1.2.0"
 
+yargs-parser@^20.2.2:
+  version "20.2.9"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-20.2.9.tgz#2eb7dc3b0289718fc295f362753845c41a0c94ee"
+  integrity sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==
+
 yargs@^15.1.0, yargs@^15.3.1, yargs@^15.4.1:
   version "15.4.1"
   resolved "https://registry.npmjs.org/yargs/-/yargs-15.4.1.tgz"
@@ -7348,3 +7426,16 @@ yargs@^15.1.0, yargs@^15.3.1, yargs@^15.4.1:
     which-module "^2.0.0"
     y18n "^4.0.0"
     yargs-parser "^18.1.2"
+
+yargs@^16.1.1:
+  version "16.2.0"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-16.2.0.tgz#1c82bf0f6b6a66eafce7ef30e376f49a12477f66"
+  integrity sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw==
+  dependencies:
+    cliui "^7.0.2"
+    escalade "^3.1.1"
+    get-caller-file "^2.0.5"
+    require-directory "^2.1.1"
+    string-width "^4.2.0"
+    y18n "^5.0.5"
+    yargs-parser "^20.2.2"
