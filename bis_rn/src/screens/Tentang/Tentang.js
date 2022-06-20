@@ -1,6 +1,9 @@
-import {StyleSheet, Text, View, BackHandler, Alert} from 'react-native';
+import {StyleSheet, BackHandler, Alert, View, Image} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Header from '../../components/Header/Header';
+import {Text} from 'react-native-paper';
+import IcLogo from '../../assets/icons/logo.png';
+
 const Tentang = ({navigation}) => {
   const [visible, setVisible] = useState({
     visibleInfo: false,
@@ -13,6 +16,7 @@ const Tentang = ({navigation}) => {
         withBack
         onPress={() => navigation.goBack()}
       />
+      <Image source={IcLogo} style={{width: 100, height: 100}} />
       <Text>Tentang Kami</Text>
     </View>
   );

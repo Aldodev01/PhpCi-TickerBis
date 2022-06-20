@@ -1,9 +1,9 @@
-import {Image, StyleSheet, Text, View, ScrollView} from 'react-native';
+import {Image, StyleSheet, View, ScrollView} from 'react-native';
 import React from 'react';
 import {Button, TextInput} from 'react-native-paper';
 import IcLogo from '../../assets/icons/logo.png';
 import Gap from '../../components/gap/Gap';
-import { RadioButton, Text as Tot } from 'react-native-paper';
+import {RadioButton, Text} from 'react-native-paper';
 
 const Register = ({navigation}) => {
   return (
@@ -11,7 +11,9 @@ const Register = ({navigation}) => {
       <Gap Gap={60} />
 
       <Image source={IcLogo} style={{width: 70, height: 70, marginRight: 30}} />
-      <Text style={styles.title}>Daftarkan Diri Anda dan Pesan tiketmu sekarang</Text>
+      <Text style={styles.title}>
+        Daftarkan Diri Anda dan Pesan tiketmu sekarang
+      </Text>
 
       <Gap Gap={60} />
       <TextInput
@@ -21,19 +23,19 @@ const Register = ({navigation}) => {
         //   onChangeText={text => setText(text)}
       />
       <Gap Gap={20} />
-      <RadioButton.Group >
+      <RadioButton.Group>
         <Text>Jenis Kelamin</Text>
-      <Gap Gap={20} />
+        <Gap Gap={20} />
 
-      <View style={{flexDirection: 'row'}}>
-        <RadioButton value="Laki - Laki" />
-        <Tot style={{marginLeft: 20, marginTop: 10}}>Laki - Laki</Tot>
-      </View>
-      <View style={{flexDirection: 'row'}}>
-        <RadioButton value="Perempuan" />
-        <Tot style={{marginLeft: 20, marginTop: 10}}>Perempuan</Tot>
-      </View>
-    </RadioButton.Group>
+        <View style={{flexDirection: 'row'}}>
+          <RadioButton value="Laki - Laki" />
+          <Text style={{marginLeft: 20, marginTop: 10}}>Laki - Laki</Text>
+        </View>
+        <View style={{flexDirection: 'row'}}>
+          <RadioButton value="Perempuan" />
+          <Text style={{marginLeft: 20, marginTop: 10}}>Perempuan</Text>
+        </View>
+      </RadioButton.Group>
       <Gap Gap={20} />
       <TextInput
         label="Alamat"
@@ -75,7 +77,6 @@ const Register = ({navigation}) => {
         Masuk
       </Button>
       <Gap Gap={90} />
-
     </ScrollView>
   );
 };

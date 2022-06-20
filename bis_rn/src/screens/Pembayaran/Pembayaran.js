@@ -1,10 +1,10 @@
-import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useContext, useState} from 'react';
 import Header from '../../components/Header/Header';
 import {TiketOrderContext} from '../../context/TiketOrderProvider';
 import Imgs from '../../assets/image/background.jpg';
 import Gap from '../../components/gap/Gap';
-import {Button, Snackbar, ToggleButton} from 'react-native-paper';
+import {Button, Snackbar, ToggleButton, Text} from 'react-native-paper';
 import LottieView from 'lottie-react-native';
 
 const Pembayaran = ({navigation}) => {
@@ -68,7 +68,9 @@ const Pembayaran = ({navigation}) => {
                 navigation.navigate('Tiket Saya');
               },
             }}>
-            <Text>Pembayaran Berhasil, Lanjutkan Melihat Tiket</Text>
+            <Text style={{color: 'white'}}>
+              Pembayaran Berhasil, Lanjutkan Melihat Tiket
+            </Text>
           </Snackbar>
         </View>
       ) : (

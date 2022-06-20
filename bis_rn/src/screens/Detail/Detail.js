@@ -1,14 +1,14 @@
-import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
+import {Image, ScrollView, StyleSheet, View} from 'react-native';
 import React, {useContext} from 'react';
 import Header from '../../components/Header/Header';
 import {TiketOrderContext} from '../../context/TiketOrderProvider';
 import Imgs from '../../assets/image/background.jpg';
 import Gap from '../../components/gap/Gap';
-import {Button} from 'react-native-paper';
+import {Button, Text} from 'react-native-paper';
 
 const Detail = ({navigation}) => {
   const [tiketOrder, setTiketOrder] = useContext(TiketOrderContext);
-  console.log(tiketOrder, '(999999999999)');
+  console.log(tiketOrder.asal, '(999999999999)');
   return (
     <View style={styles.splashWrap}>
       <Header
@@ -21,7 +21,7 @@ const Detail = ({navigation}) => {
 
       <Text style={styles.judul}>
         <Gap Gop={20} />
-        Detail Tiket :{' '}
+        Detail Tiket :
       </Text>
 
       <ScrollView style={styles.container}>
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
     flex: 1,
     display: 'flex',
     position: 'relative',
+    color: 'black',
   },
   container: {
     padding: 20,
