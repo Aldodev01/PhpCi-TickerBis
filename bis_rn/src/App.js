@@ -16,6 +16,8 @@ import Bantuan from './screens/Bantuan/Bantuan';
 import Register from './screens/Register/Register';
 import Lokasi from './screens/Lokasi/Lokasi';
 import Pesan from './screens/Pesan/Pesan';
+import Pembayaran from './screens/Pembayaran/Pembayaran';
+import Detail from './screens/Detail/Detail';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -34,7 +36,7 @@ const App = () => {
       if (title === 'Home') {
         return actived ? <IcHome /> : <IcHome />;
       }
-      if (title === 'Print') {
+      if (title === 'Tiket Saya') {
         return actived ? <IcPrinter /> : <IcPrinter />;
       }
       // if (title === 'Hospitals') {
@@ -115,7 +117,7 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Tab.Screen
-          name="Print"
+          name="Tiket Saya"
           component={Print}
           options={{headerShown: false}}
         />
@@ -126,7 +128,7 @@ const App = () => {
   return (
     <PaperProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="MainApp">
+        <Stack.Navigator initialRouteName="Register">
           <Stack.Screen
             name="Splash"
             component={Splash}
@@ -172,6 +174,16 @@ const App = () => {
             component={Pesan}
             options={{headerShown: false}}
           />
+          <Stack.Screen
+            name="Detail"
+            component={Detail}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="Pembayaran"
+            component={Pembayaran}
+            options={{headerShown: false}}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
@@ -189,6 +201,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
   },
 });
 

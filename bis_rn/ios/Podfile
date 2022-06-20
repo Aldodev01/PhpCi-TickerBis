@@ -19,6 +19,10 @@ target 'bis_rn' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  pod 'react-native-maps', :path => '../node_modules/react-native-maps'
+
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+
   target 'bis_rnTests' do
     inherit! :complete
     # Pods for testing

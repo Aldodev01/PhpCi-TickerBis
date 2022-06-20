@@ -25,6 +25,7 @@ const Login = ({navigation}) => {
       <TextInput
         label="Password"
         mode="outlined"
+        secureTextEntry
         //   value={text}
         //   onChangeText={text => setText(text)}
       />

@@ -1,9 +1,11 @@
-import {StyleSheet, Text, View, BackHandler, Alert} from 'react-native';
+import {StyleSheet, Text, View, BackHandler, Alert, Image} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {UserGet} from '../../api/UserApi';
 import {Avatar, Button} from 'react-native-paper';
 import Header from '../../components/Header/Header';
 import Informasi from '../../components/Informasi/Informasi';
+import BgL from '../../assets/image/BgL.png';
+
 const Home = ({navigation}) => {
   const [dataUser, setDataUser] = useState(null);
   const [visible, setVisible] = useState({
@@ -19,7 +21,7 @@ const Home = ({navigation}) => {
 
   useEffect(() => {
     const backAction = () => {
-      Alert.alert('Apakah Kamu Yakin ingin Keluar ?', [
+      Alert.alert('Ticket Biss Log out !', 'Apakah Anda yakin ingin keluar ?', [
         {
           text: 'Batalkan',
           onPress: () => null,
@@ -49,6 +51,7 @@ const Home = ({navigation}) => {
 
   return (
     <View style={styles.splashWrap}>
+      <Image style={styles.imageBgL} source={BgL} />
       <Header headerTitle="Home" />
 
       <View style={styles.menu}>
@@ -64,6 +67,7 @@ const Home = ({navigation}) => {
           onPress={() => navigation.navigate('Tentang')}>
           Tentang
         </Button>
+
         <Button
           style={{margin: 20}}
           mode="contained"
@@ -110,6 +114,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  imageBgL: {
+    position: 'absolute',
+    bottom: 0,
+    right: 10,
+    width: 250,
+    height: 250,
   },
 });
 
