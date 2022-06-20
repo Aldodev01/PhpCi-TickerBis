@@ -10,59 +10,24 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="my-4">Kota Asal</h1>
-        <button type="button" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Tambah </button>
+      <br>
+        <h1 class="my-4"><?= $title ?></h1>
     <table class="table">
   <thead>
     <tr>
       <th scope="col">No</th>
       <th scope="col">Nama kota</th>
-      <th scope="col">Aksi</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th scope="row">1</th>
-      <td>surabaya</td>
-
-      <td> 
-        <button type="button" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i></button> 
-        <button type="button" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
-      </td>
+    <?php foreach($data_tiket as $i => $data ) : ?>
+      <th scope="row"><?= ++$i ?></th>
+      <td><?= $data->kota_asal ?></td>
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Semarang</td>
-
-      <td> 
-        <button type="button" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i></button> 
-        <button type="button" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
-      </td>
-    </tr>
-     <tr>
-      <th scope="row">3</th>
-      <td>Tegal</td>
-      <td> 
-        <button type="button" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i></button> 
-        <button type="button" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
-      </td>
-    </tr>
-      <tr>
-      <th scope="row">4</th>
-      <td>Jogjakarta</td>
-      <td> 
-        <button type="button" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i></button> 
-        <button type="button" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
-      </td>
-    </tr>
-      <tr>
-      <th scope="row">5</th>
-      <td>Bandung</td>
-      <td> 
-        <button type="button" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i></button> 
-        <button type="button" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
-      </td>
-    </tr>
+    
+     
+     <?php endforeach ?>
     
   </tbody>
 </table>

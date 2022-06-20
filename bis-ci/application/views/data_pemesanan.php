@@ -10,8 +10,8 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="my-4"> Data pemesanan</h1>
-        <button type="button" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Tambah </button>
+        <h1 class="my-4"> <?= $title ?></h1>
+        <a  href="<?= base_url('index.php/c_data_tiket/halaman_tambah'); ?>" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Tambah </a>
        
     <table class="table">
   <thead>
@@ -28,29 +28,33 @@
   </thead>
   <tbody>
     <tr>
-      <th scope="row">1</th>
-      <td>semarang</td>
+      <?php foreach($data_tiket as $i => $data ) : ?>
+      <th scope="row"><?= ++$i ?></th>
+      <td><?= $data->kota_asal ?></td>
       <td>
-        Wonosobo-purwokerto
+      <?= $data->kota_tujuan ?>
       </td>
       <td> 
-       2015-02-08
+      <?= $data->tanggal_berangkat ?>
       </td>
       <td>
-      14:20
+      <?= $data->jam_berangkat ?>
+
       </td>
       <td>
-      4500000
+      <?= $data->harga_tiket ?>
+
       </td>
       <td>
-       40
+      <?= $data->maximum_seat ?>
+
       </td>
     <td>
-        <button type="button" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i></button> 
-        <button type="button" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
+        <a href="<?php echo base_url();?>index.php/c_data_tiket/edit_tiket/<?= $data->id_pemesanan;?>" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i></a> 
+        <a href="<?php echo base_url();?>index.php/c_data_tiket/hapusdata_tiket/<?= $data->id_pemesanan;?>" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></a>
     </td>
 </tr> 
-    
+    <?php endforeach ?>
      
        
   </tbody>

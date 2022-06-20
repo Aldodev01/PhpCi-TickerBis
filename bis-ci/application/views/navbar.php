@@ -23,25 +23,25 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-bs-toggle="dropdown" aria-expanded="false"> <i class="fa-solid fa-border-all"></i> Master</a>
           <ul class="dropdown-menu" aria-labelledby="dropdown01">
-            <li><a class="dropdown-item" href="<?= base_url('index.php/kota_asal'); ?>"><i class="fa-solid fa-road"></i> Kota Asal</a></li>
-            <li><a class="dropdown-item" href="<?= base_url('index.php/kota_tujuan'); ?>"><i class="fa-solid fa-road"></i> Kota Tujuan</a></li>
-            <li><a class="dropdown-item" href="<?= base_url('index.php/data_member'); ?>"><i class="fa-solid fa-user"></i> Member</a></li>
+            <li><a class="dropdown-item" href="<?= base_url('index.php/c_data_tiket/kota_asal'); ?>"><i class="fa-solid fa-road"></i> Kota Asal</a></li>
+            <li><a class="dropdown-item" href="<?= base_url('index.php/c_data_tiket/kota_tujuan'); ?>"><i class="fa-solid fa-road"></i> Kota Tujuan</a></li>
+            <li><a class="dropdown-item" href="<?= base_url(); ?>index.php/c_data_user/index"><i class="fa-solid fa-user"></i> Member</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-bs-toggle="dropdown" aria-expanded="false"> <i class="fa-solid fa-signal"></i> Transaksi</a>
           <ul class="dropdown-menu" aria-labelledby="dropdown02">
-            <li><a class="dropdown-item" href="<?= base_url('index.php/data_jadwal'); ?>"><i class="fa-solid fa-briefcase"></i> Penjadwalan</a></li>
-            <li><a class="dropdown-item" href="<?= base_url('index.php/data_pemesanan'); ?>"><i class="fa-solid fa-bars-progress"></i> Pemesanan</a></li>
+            <li><a class="dropdown-item" href="<?= base_url('index.php/c_data_tiket/jadwal'); ?>"><i class="fa-solid fa-briefcase"></i> Penjadwalan</a></li>
+            <li><a class="dropdown-item" href="<?= base_url('index.php/c_data_tiket/'); ?>"><i class="fa-solid fa-bars-progress"></i> Pemesanan</a></li>
           </ul>
         </li>
          <li class="nav-item">
-          <a class="nav-link" href="#"><i class="fa-solid fa-calendar-days"></i> Laporan</a>
+          <a class="nav-link" href="<?= base_url(); ?>index.php/c_halaman_laporan/index"><i class="fa-solid fa-calendar-days"></i> Laporan</a>
         </li>
          <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdown02" data-bs-toggle="dropdown" aria-expanded="false"> <i class="fa-solid fa-gear"></i> Utility</a>
           <ul class="dropdown-menu" aria-labelledby="dropdown02">
-            <li><a class="dropdown-item" href="#"><i class="fa-solid fa-pen-to-square"></i> Ganti Password</a></li>
+            <li><a class="dropdown-item" href="<?= base_url(); ?>index.php/ganti_password/index"><i class="fa-solid fa-pen-to-square"></i> Ganti Password</a></li>
           </ul>
         </li>
       </ul>

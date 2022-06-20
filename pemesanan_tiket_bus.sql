@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 18, 2022 at 06:54 AM
+-- Generation Time: Jun 20, 2022 at 01:13 PM
 -- Server version: 10.4.22-MariaDB
 -- PHP Version: 8.1.2
 
@@ -44,7 +44,8 @@ CREATE TABLE `data_user` (
   `id_datauser` int(11) NOT NULL,
   `id_pemesanan` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
-  `tanggal_lahir` date NOT NULL,
+  `nama` text NOT NULL,
+  `tanggal_lahir` text NOT NULL,
   `jenis_kelamin` text NOT NULL,
   `alamat` text NOT NULL,
   `no_telp` text NOT NULL,
@@ -56,13 +57,8 @@ CREATE TABLE `data_user` (
 -- Dumping data for table `data_user`
 --
 
-INSERT INTO `data_user` (`id_datauser`, `id_pemesanan`, `username`, `tanggal_lahir`, `jenis_kelamin`, `alamat`, `no_telp`, `password`, `status`) VALUES
-(8, 3, 'asdsad', '2022-04-13', 'Pria', 'asdsad', '657567567', 'asdsadasd', 'admin'),
-(9, 0, '', '0000-00-00', '', '', '', '', ''),
-(10, 0, '', '0000-00-00', '', '', '', '', ''),
-(11, 0, '', '0000-00-00', '', '', '', '', ''),
-(12, 0, '', '0000-00-00', '', '', '', '', ''),
-(13, 0, '', '0000-00-00', '', '', '', '', '');
+INSERT INTO `data_user` (`id_datauser`, `id_pemesanan`, `username`, `nama`, `tanggal_lahir`, `jenis_kelamin`, `alamat`, `no_telp`, `password`, `status`) VALUES
+(14, 0, 'abdul@gmail.com', 'abdul\r\n', '02/04/2002', 'Laki-Laki', 'Jl.Kedondong Sawangan, No.8', '08199900221', 'abdul123', 'admin');
 
 -- --------------------------------------------------------
 
@@ -75,7 +71,7 @@ CREATE TABLE `pemesanan_tiket` (
   `id_pendapatan` int(11) NOT NULL,
   `kota_asal` varchar(255) NOT NULL,
   `kota_tujuan` varchar(255) NOT NULL,
-  `tanggal_berangkat` date NOT NULL,
+  `tanggal_berangkat` text NOT NULL,
   `jam_berangkat` time NOT NULL,
   `harga_tiket` int(11) NOT NULL,
   `maximum_seat` int(11) NOT NULL
@@ -86,7 +82,7 @@ CREATE TABLE `pemesanan_tiket` (
 --
 
 INSERT INTO `pemesanan_tiket` (`id_pemesanan`, `id_pendapatan`, `kota_asal`, `kota_tujuan`, `tanggal_berangkat`, `jam_berangkat`, `harga_tiket`, `maximum_seat`) VALUES
-(1, 0, '', '', '0000-00-00', '00:00:00', 0, 0);
+(10, 0, 'YOGYAKARTA', 'BOGOR', '02/04/2022', '10:50:00', 600000, 40);
 
 --
 -- Indexes for dumped tables
@@ -127,13 +123,13 @@ ALTER TABLE `data_laporan`
 -- AUTO_INCREMENT for table `data_user`
 --
 ALTER TABLE `data_user`
-  MODIFY `id_datauser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id_datauser` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `pemesanan_tiket`
 --
 ALTER TABLE `pemesanan_tiket`
-  MODIFY `id_pemesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_pemesanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
