@@ -1,10 +1,25 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {Button, TextInput} from 'react-native-paper';
 import IcLogo from '../../assets/icons/logo.png';
 import Gap from '../../components/gap/Gap';
 
 const Login = ({navigation}) => {
+  const [payload, setPayload] = useState({
+    email: '',
+    password: '',
+  });
+  const email = 'aldodevox@gmail.com';
+  const password = '123456';
+
+  const handleLogin = async () => {
+    if (payload.email === email && payload.password === password) {
+      navigation.navigate('MainApp');
+    } else {
+      alert('Email atau Password salah');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Gap Gap={60} />
@@ -18,7 +33,7 @@ const Login = ({navigation}) => {
         label="Email"
         mode="outlined"
         //   value={text}
-        //   onChangeText={text => setText(text)}
+        onChangeText={text => setPayload({...payload, email: text})}
       />
       <Gap Gap={20} />
 
@@ -27,10 +42,10 @@ const Login = ({navigation}) => {
         mode="outlined"
         secureTextEntry
         //   value={text}
-        //   onChangeText={text => setText(text)}
+        onChangeText={text => setPayload({...payload, password: text})}
       />
       <Gap Gap={40} />
-      <Button mode="contained" onPress={() => navigation.navigate('MainApp')}>
+      <Button mode="contained" onPress={handleLogin}>
         Submit
       </Button>
       <Gap Gap={10} />

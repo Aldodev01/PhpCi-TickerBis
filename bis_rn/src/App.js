@@ -39,9 +39,6 @@ const App = () => {
       if (title === 'Tiket Saya') {
         return actived ? <IcPrinter /> : <IcPrinter />;
       }
-      // if (title === 'Hospitals') {
-      //   return actived ? <IconHospitalsActive /> : <IconHospitals />;
-      // }
 
       return <IcHome />;
     };

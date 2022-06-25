@@ -20,21 +20,21 @@ const Print = ({navigation}) => {
     });
   }
 
-  async function printPDF() {
-    const results = await RNHTMLtoPDF.convert({
-      html: '<h1>Custom converted PDF Document</h1>',
-      fileName: 'test',
-      base64: true,
-    });
+  // async function printPDF() {
+  //   const results = await RNHTMLtoPDF.convert({
+  //     html: '<h1>Custom converted PDF Document</h1>',
+  //     fileName: 'test',
+  //     base64: true,
+  //   });
 
-    await RNPrint.print({filePath: results.filePath});
-  }
+  //   await RNPrint.print({filePath: results.filePath});
+  // }
 
-  async function printRemotePDF() {
-    await RNPrint.print({
-      filePath: 'https://graduateland.com/api/v2/users/jesper/cv',
-    });
-  }
+  // async function printRemotePDF() {
+  //   await RNPrint.print({
+  //     filePath: 'https://graduateland.com/api/v2/users/jesper/cv',
+  //   });
+  // }
   return (
     <View style={{flex: 1}}>
       <Header headerTitle="Print" />
