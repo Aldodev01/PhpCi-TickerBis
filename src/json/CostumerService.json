@@ -1,0 +1,39 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "nama": "Aldodevv",
+      "link": "https://t.me/Aldodevv",
+      "image": "https://joeschmoe.io/api/v1/random",
+      "status": "Online"
+    },
+    {
+      "id": 2,
+      "nama": "Aldopro",
+      "link": "https://t.me/Aldodevv",
+      "image": "https://joeschmoe.io/api/v1/random",
+      "status": "Online"
+    },
+    {
+      "id": 3,
+      "nama": "Aldo",
+      "link": "https://t.me/Aldodevv",
+      "image": "https://joeschmoe.io/api/v1/random",
+      "status": "Online"
+    },
+    {
+      "id": 4,
+      "nama": "AldoGo",
+      "link": "https://t.me/Aldodevv",
+      "image": "https://joeschmoe.io/api/v1/random",
+      "status": "Offline"
+    },
+    {
+      "id": 5,
+      "nama": "AldoXo",
+      "link": "https://t.me/Aldodevv",
+      "image": "https://joeschmoe.io/api/v1/random",
+      "status": "Offline"
+    }
+  ]
+}

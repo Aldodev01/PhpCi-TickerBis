@@ -1,0 +1,60 @@
+{
+  "name": "imezi-aldo",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@craco/craco": "^6.4.3",
+    "@testing-library/jest-dom": "^5.11.4",
+    "@testing-library/react": "^11.1.0",
+    "@testing-library/user-event": "^12.1.10",
+    "antd": "^4.17.3",
+    "antd-mobile": "^5.0.0-rc.25",
+    "axios": "^0.24.0",
+    "chart.js": "^3.7.0",
+    "convert-csv-to-json": "^1.3.1",
+    "craco-less": "^1.20.0",
+    "faker": "^6.6.6",
+    "file-saver": "^2.0.5",
+    "react": "^17.0.2",
+    "react-barcodes": "^1.2.0",
+    "react-chartjs-2": "^4.0.0",
+    "react-dom": "^17.0.2",
+    "react-google-recaptcha": "^2.1.0",
+    "react-icons": "^4.3.1",
+    "react-lottie": "^1.2.3",
+    "react-papaparse": "^4.0.2",
+    "react-query": "^3.34.7",
+    "react-router-dom": "^6.1.1",
+    "react-scripts": "4.0.3",
+    "react-to-print": "^2.14.3",
+    "swiper": "6.6.2",
+    "web-vitals": "^1.0.1",
+    "xlsx": "^0.18.4",
+    "zustand": "^3.6.7"
+  },
+  "scripts": {
+    "aldodevv": "craco start",
+    "build": "GENERATE_SOURCEMAP=false CI=false && react-scripts build && echo '/* /index.html  200' | cat >build/_redirects",
+    "test": "craco test",
+    "aldo": "craco build && echo '/* /index.html  200' | cat >build/_redirects",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

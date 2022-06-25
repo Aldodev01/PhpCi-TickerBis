@@ -1,0 +1,76 @@
+@import url("../../../../../costom.less");
+
+.secondOrder-wrapper {
+  width: 100%;
+  display: flex;
+  gap: 20px;
+}
+
+.secondOrder-orderList {
+  height: 100%;
+  max-height: 500px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: @primary-color;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  box-shadow: @box-shadow-base;
+  padding: 10px;
+}
+
+.secondOrder-listing {
+  width: 100%;
+  display: flex;
+  background-color: #f8f8ff;
+  border-radius: 10px;
+  box-shadow: @box-shadow-base;
+  height: 100%;
+  max-height: 60px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.thirdOrder-head {
+  background-color: @success-color;
+}
+
+.thirdOrder-container {
+  max-width: 700px;
+  padding: 20px;
+  color: white;
+  border-radius: @border-radius-base;
+  box-shadow: @box-shadow-base;
+  border: 1px solid @heading-color;
+}
+
+.thirdOrder-body {
+  background-color: @primary-color;
+}
+
+.thirdOrder-body-second {
+  background-color: @error-color;
+}
+
+.thirdOrder-save {
+  width: 100%;
+  max-width: 500px;
+  position: fixed !important;
+  bottom: 5px;
+  margin: 2% auto;
+  left: 0;
+  right: 0;
+  box-shadow: @box-shadow-base;
+  background-color: whitesmoke;
+  border-radius: @border-radius-base;
+  padding: 10px;
+}
+
+.w100px {
+  width: 100px;
+}
