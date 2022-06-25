@@ -22,35 +22,16 @@
   </thead>
   <tbody>
     <tr>
-      <th scope="row">1</th>
-      <td>sinta@sinta.com</td>
+    <?php foreach($data_user as $i => $data ) : ?>
+
+      <th scope="row"><?= ++$i ?></th>
+      <td><?= $data->username ?></td>
 
       <td> 
-        sinta putri
+      <?= $data->nama ?>
       </td>
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>abim@crasnetmedia.com</td>
-      <td> 
-        abim
-      </td>
-    </tr>
-     <tr>
-      <th scope="row">3</th>
-      <td>matrixs27@.com</td>
-      <td> 
-        dewiretno bulan
-      </td>
-    </tr>
-      <tr>
-      <th scope="row">4</th>
-      <td>jhon@jhony.com</td>
-      <td> 
-        jhony iskandar ismail
-      </td>
-    
-    
+   <?php endforeach ?>
   </tbody>
 </table>
 </div>

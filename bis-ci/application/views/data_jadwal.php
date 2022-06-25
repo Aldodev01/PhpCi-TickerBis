@@ -10,49 +10,29 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="my-4"> Data jadwal</h1>
-        <button type="button" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Tambah </button>
-       
+      <br>
+       <h1><?= $title ?></h1>
+        
     <table class="table">
   <thead>
     <tr>
       <th scope="col">No</th>
-      <th scope="col">Kota Asal</th>
-      <th scope="col">Kota Tujuan</th>
-      <th scope="col">Tanggal Berangkat</th>
-      <th scope="col">Jam Berangkat</th>
-      <th scope="col">Harga Tiket</th>
-      <th scope="col">Maximum seat</th>
-      <th scope="col">Aksi</th>
+      <th scope="col">Tanggal Keberangkatan</th>
+      <th scope="col">Jam Keberangkatan</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th scope="row">1</th>
-      <td>semarang</td>
-      <td>
-        Wonosobo-purwokerto
-      </td>
-      <td> 
-       2015-02-08
-      </td>
-      <td>
-      14:20
-      </td>
-      <td>
-      4500000
-      </td>
-      <td>
-       40
-      </td>
-    <td>
-        <button type="button" class="btn btn-success"><i class="fa-solid fa-pen-to-square"></i></button> 
-        <button type="button" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></button>
-    </td>
-</tr> 
+    <?php foreach($data_tiket as $i => $data ) : ?>
+      <th scope="row"><?= ++$i ?></th>
+      <td><?= $data->tanggal_berangkat ?></td>
+      <td><?= $data->jam_berangkat ?></td>
+
+    </tr>
     
      
-       
+     <?php endforeach ?>
+    
   </tbody>
 </table>
 </div>
